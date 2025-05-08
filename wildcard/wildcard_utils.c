@@ -1,29 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wildcard.h                                         :+:      :+:    :+:   */
+/*   wildcard_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 15:59:33 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/08 20:55:56 by zlee             ###   ########.fr       */
+/*   Created: 2025/05/08 20:34:53 by zlee              #+#    #+#             */
+/*   Updated: 2025/05/08 21:08:42 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WILDCARD_H
-# define WILDCARD_H
-# include "libft/libft.h"
+#include "wildcard.h"
 
-typedef struct s_pos
+void	free_array(char **arr)
 {
-	int	x;
-	int y;
-}	t_pos;
+	int	i;
 
-/*Utils*/
-void	free_array(char **arr);
-int		count_trim_lines(char **arr, const char *filename);
+	i = 0;
+	while(arr[i])
+	{
+		free(arr[i++]);
+	}
+	free(arr[i]);
+	free(arr);
+}
 
-int		ft_fnmatch(const char *pattern, const char *filename);
-char	**wildcard(const char *pattern, const char *path);
-#endif
+int	count_trim_lines(char **arr, const char *filename)
+{
+	int	c;
+	int	i;
+
+	c = 0;
+	i = 0;
+	if (filename[0] == '*')
+		c++;
+	while(arr[i])
+		c += ft_strlen(arr[i++]) + 1;
+	if (filename[ft_strlen(filename) - 1] != '*')
+		c--;
+	return (c);
+}
+
