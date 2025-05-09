@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:03:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/08 23:00:10 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/09 12:41:19 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,28 @@
 */ 			
 static int	fn_match_helper(const char *pattern, const char *filename)
 {
+	char	*temp_addr;
+
+	temp_addr = NULL;
 	if (*pattern == '\0' && *filename == '\0')
 		return (1);
-	else if (*pattern == '\0' && *filename != '\0')
+	if (*pattern == '\0')
 		return (0);
-	else if (*pattern == '*' && *(++pattern) == '\0')
-		return (1);
-	--pattern;
-	if (*pattern != '*')
+	if (*pattern == '*')
 	{
-		if (*pattern == *filename)
-			return (ft_fnmatch(++pattern, ++filename));
-		else
-			return (0);
-	}
-	else
-	{
-		pattern++;
-		if (!fn_match_helper(pattern, filename))
-			return (fn_match_helper(--pattern, ++filename));
-		else
+		temp_addr = (char *)pattern + 1;
+		if (*(temp_addr) == '\0')
 			return (1);
+		if (fn_match_helper(temp_addr, filename))
+			return (1);
+		temp_addr = (char *)filename + 1;
+		if (*filename != '\0' && fn_match_helper(pattern, temp_addr))
+			return (1);
+		return (0);
 	}
+	if (*pattern == *filename)
+		return (fn_match_helper(++pattern, ++filename));
+	return (0);
 }
 
 static void	alloc_with_asterisks(char **string_join, const char *pattern, int characters, char **arr)
