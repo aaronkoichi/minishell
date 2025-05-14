@@ -16,13 +16,13 @@ int main(int ac, char **av, char **envp)
 	memset(&pork, 0, sizeof(int[2]));
 	if (pipe(pipe_fd) < 0)
 		perror("pipe failed\n");
-	pork[0] = fork();
+
 	if (pork[0] == 0)
 	{
 		dup2(pipe_fd[1], 1);
 		close(pipe_fd[1]);
 		close(pipe_fd[0]);
-		execve(array[0], array, envp);
+	  	execve(array[0], array, envp);
 	}
 
 	pork[1] = fork();
