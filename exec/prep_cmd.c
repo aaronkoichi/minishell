@@ -6,49 +6,14 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:23:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/14 18:06:38 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/14 21:02:38 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "../libft/libft.h"
 
-void	free_arr(char **arr)
-{
-	int i;
-
-	i = 0;
-	while(arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr[i]);
-	free(arr);
-}
-
-int	run_cmd(char **exec, char **envp)
-{
-	int pid;
-	int	status;
-
-	pid = fork();
-	status = 0;
-	if (pid == 0)
-	{
-		execve(exec[0], exec, envp);
-		perror("execve error\n");
-		exit(EXIT_FAILURE);
-	}
-	waitpid(pid, &status, 0);
-	free_arr(exec);
-	if (status != 0)
-		return (EXIT_FAILURE);
-	else
-		return (EXIT_SUCCESS);
-}
-
-char	**find_full_cmd(char **path, char **cmd_arr, char **envp)
+static char	**find_full_cmd(char **path, char **cmd_arr, char **envp)
 {
 	char	*new_path;
 	int		i;
@@ -75,7 +40,7 @@ char	**find_full_cmd(char **path, char **cmd_arr, char **envp)
 	return (cmd_arr);
 }
 
-char	**prep_envp_cmd(char **cmd_arr, char **envp)
+static char	**prep_envp_cmd(char **cmd_arr, char **envp)
 {
 	char	**path;
 	int		i;
@@ -96,7 +61,7 @@ char	**prep_envp_cmd(char **cmd_arr, char **envp)
 	return (find_full_cmd(path, cmd_arr, envp));
 }
 
-char	**init_cmd(int ac, char **av)
+static char	**init_cmd(int ac, char **av)
 {
 	char	**cmd;
 	int		i;
