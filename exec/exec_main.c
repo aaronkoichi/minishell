@@ -6,141 +6,94 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/14 16:23:17 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/19 15:17:42 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-void	parse_cmd(t_ast *node)
+void	function_tree_seq(t_ast *node, char **envp)
 {
-	int fd;
-	int	fork;
-	int	status;
-	// Skip the heredoc part for now
-	// Check for redir before running execve
-	// Check for redir
-	if (node->cmd->redirs->type == REDIR_IN)
-	{
-		status = access(node->cmd->redirs->filename, F_OK | R_OK);
-		if (status == -1)
-			; // Some error handling
-		else
-			fd = open(node->cmd->redirs->filename, O_RDONLY);
-	}
-	else if (node->cmd->redirs->type == REDIR_OUT)
-	{
-	
-	}
-	else if (node->cmd->redirs->type == REDIR_APPEND)
-	{
-
-
-	}
+	exec_main(node->left, envp);
+	exec_main(node->right, envp);
 }
 
-void	function_tree(t_ast *node)
+void	function_tree_subshell(t_ast *node, char **envp)
 {
-	int	status;
-	int	fork_pid[2];
-	int	pipefd[2];
+	t_exec	info;
 
-	status = 0;
-	memset(&fork_pid, 0, sizeof(int[2]));
-	if (node->type == NODE_SEQUENCE)
-	{
-		exec_main(node->left);
-		exec_main(node->right);
+	memset(&info, 0, sizeof(t_exec));
+	info.fork_pid[0] = fork();
+	if (info.fork_pid[0] < 0)
+		perror("subshell\n");
+	if (info.fork_pid[0] == 0)
+		exec_main(node->left, envp);
+	else
+		waitpid(info.fork_pid[0], &info.status, 0);
+	if (info.status != 0)
+		;
+	return ;
+}
+
+void	function_tree_and(t_ast *node, char **envp)
+{
+	t_exec	info;
+
+	memset(&info, 0, sizeof(t_exec));
+	info.fork_pid[0]= fork();
+	if (info.fork_pid[0] < 0)
+		perror("Fork Error\n");
+	else if (info.fork_pid[0] == 0)
+		exec_main(node->left, envp);
+	else
+		waitpid(info.fork_pid[0], &info.status, 0);
+	if (info.status == 0)
+		exec_main(node->right, envp);
+	else
 		return ;
-	}
-	else if (node->type == NODE_SUBSHELL)
-	{
-		fork_pid[0] = fork();
-		if (fork_pid[0] < 0)
-			perror("Fork Error\n");
-		if (fork_pid[0] == 0)
-			exec_main(node->left);
-		else
-			waitpid(fork_pid[0], &status, 0);
-		if (status != 0)
-			return ;
-	}
-	else if (node->type == NODE_AND)
-	{
-		fork_pid[0] = fork();
-		if (fork_pid[0] < 0)
-			perror("Fork Error\n");
-		if (fork_pid[0] == 0)
-			exec_main(node->left);
-		else
-			waitpid(fork_pid[0], &status, 0);
-		if (status == 0)
-			exec_main(node->right);
-		else
-			return ;
-	}
-	else if (node->type == NODE_OR)
-	{
-		fork_pid[0] = fork();
-		if (fork_pid[0] < 0)
-			perror("Fork Error\n");
-		if (fork_pid[0] == 0)
-			exec_main(node->left);
-		else
-			waitpid(fork_pid[0], &status, 0);
-		if (status != 0)
-			exec_main(node->right);
-		else
-			return ;
-
-	}
-	else if (node->type == NODE_PIPE)
-	{
-		if (pipe(pipefd) < 0)
-		{
-			perror("pipe\n");
-			exit (EXIT_FAILURE);
-		}
-		fork_pid[0] = fork();
-		if (fork_pid[0] < 0)
-			perror("Fork Error\n");
-		if (fork_pid[0] == 0)
-		{
-			dup2(pipefd[1], 1);
-			close(pipefd[0]);
-			close(pipefd[1]);
-			exec_main(node->left);
-			exit(EXIT_SUCCESS);
-		}
-		fork_pid[1] = fork();
-		if (fork_pid[1] < 0)
-			perror("Fork Error\n");
-		if (fork_pid[1] == 0)
-		{
-			dup2(pipefd[0], 0);
-			close(pipefd[0]);
-			close(pipefd[1]);
-			exec_main(node->right);
-			exit(EXIT_SUCCESS);
-		}
-		close(pipefd[0]);
-		close(pipefd[1]);
-		waitpid(fork_pid[0], NULL, 0);
-		waitpid(fork_pid[1], NULL, 0);
-
-	}
-	else if (node->type == NODE_COMMAND)
-	{
-		parse_cmd(node);
-	}
 }
 
-void	exec_main(t_ast *node)
+void	function_tree_or(t_ast *node, char **envp)
+{
+	t_exec	info;
+
+	memset(&info, 0, sizeof(t_exec));
+	info.fork_pid[0]= fork();
+	if (info.fork_pid[0] < 0)
+		perror("Fork Error\n");
+	else if (info.fork_pid[0] == 0)
+		exec_main(node->left, envp);
+	else
+		waitpid(info.fork_pid[0], &info.status, 0);
+	if (info.status != 0)
+		exec_main(node->right, envp);
+	else
+		return ;
+}
+
+void	function_tree(t_ast *node, char **envp)
+{
+	if (node->type == NODE_SEQUENCE)
+		function_tree_seq(node, envp);
+	else if (node->type == NODE_SUBSHELL)
+		function_tree_subshell(node, envp);
+	else if (node->type == NODE_AND)
+		function_tree_and(node, envp);
+	else if (node->type == NODE_OR)
+		function_tree_or(node, envp);
+	else if (node->type == NODE_PIPE)
+		function_tree_pipe(node, envp);
+	else if (node->type == NODE_COMMAND)
+		parse_cmd(node, envp);
+	return ;
+}
+
+void	exec_main(t_ast *node, char **envp)
 {
 	if (node->type == NODE_ROOT)
-		exec_main(node->left);
+		exec_main(node->left, envp);
 	if (node == NULL)
 		return ;
 	else
-		function_tree(node);
+		function_tree(node, envp);
 }

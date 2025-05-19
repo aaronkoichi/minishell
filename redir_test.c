@@ -8,10 +8,10 @@ int main(void)
 	int fork;
 	int fd;
 
-	fd = open("test3.txt", O_RDWR);
-	dup2(fd, 0);
+	fd = open("stdout.txt", O_RDWR);
+	dup2(fd, 1);
 	close(fd);
-	char *arr[] = {"/usr/bin/cat", NULL};
+	char *arr[] = {"/usr/bin/echo", "hello0000000000000\n" , NULL};
 	execve(arr[0], arr, 0);
 }
 
