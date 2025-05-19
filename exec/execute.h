@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/19 12:49:59 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/19 18:10:52 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,6 @@ char	**prep_cmd(t_cmd *cmd, char **envp);
 void	function_tree_pipe_left(t_ast *node, char **envp, t_exec *info);
 void	function_tree_pipe_right(t_ast *node, char **envp, t_exec *info);
 void	function_tree_pipe(t_ast *node, char **envp);
+// exec_parse_cmd.c
+void	parse_cmd(t_ast *node, char **envp);
 #endif
