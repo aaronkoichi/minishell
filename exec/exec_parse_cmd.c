@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/20 08:05:37 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/22 16:08:10 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,13 +100,17 @@ int	parse_cmd(t_ast *node, char **envp)
 	char	**command;
 
 	command = prep_cmd(node->cmd, envp);
-	if (node->cmd->redirs->type == REDIR_IN)
-		return (parse_cmd_redir_in(node, envp, command));
-	else if (node->cmd->redirs->type == REDIR_OUT)
-		return (parse_cmd_redir_out(node, envp, command));
-	else if (node->cmd->redirs->type == REDIR_APPEND)
-		return (parse_cmd_redir_append(node, envp, command));
-	else
-		return (parse_cmd_fork(node, envp, command));
+	while (node->cmd->redirs != NULL)
+	{
+		if (node->cmd->redirs->type == REDIR_IN)
+			parse_cmd_redir_in(node, envp, command);
+		else if (node->cmd->redirs->type == REDIR_OUT)
+			 parse_cmd_redir_out(node, envp, command);
+		else if (node->cmd->redirs->type == REDIR_APPEND)
+			 parse_cmd_redir_append(node, envp, command);
+		else
+			 parse_cmd_fork(node, envp, command);
+		node->cmd->redirs = node->cmd->redirs->next;
+	}
 }
 

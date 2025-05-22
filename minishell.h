@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/09 17:18:34 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/22 15:58:31 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_redir
 	char			*filename;
 	char			*heredoc_content;
 	char			*heredoc_EOF;
+	struct s_redir	*next;
 }	t_redir;
 
 typedef struct s_cmd
