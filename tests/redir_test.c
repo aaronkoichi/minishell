@@ -3,7 +3,6 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
-
 void	execute_cmd(int out_fd)
 {
 	int fd;
