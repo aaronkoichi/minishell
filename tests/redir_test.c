@@ -38,8 +38,8 @@ void	execute_cmd(int out_fd)
 
 int main(void)
 {
-	int file = open("test1.txt", O_RDWR);
-	int file2 = open("test2.txt", O_APPEND | O_RDWR);
+	int file = open("test1.txt", O_CREAT | O_RDWR, 0644);
+	int file2 = open("test2.txt", O_CREAT | O_APPEND | O_RDWR, 0644);
 
 	execute_cmd(file);
 	execute_cmd(file2);
