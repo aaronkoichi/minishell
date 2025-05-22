@@ -53,6 +53,7 @@ typedef struct s_redir
 	char			*filename;
 	char			*heredoc_content;
 	char			*heredoc_EOF;
+	struct s_redir	*next;
 }	t_redir;
 
 typedef struct s_cmd
