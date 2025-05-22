@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/19 18:10:52 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/20 08:00:15 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,16 @@ typedef struct s_exec
 	int	pipe_fd[2];
 }	t_exec;
 // exec_main.c
-void	exec_main(t_ast *node, char **envp);
+int		exec_main(t_ast *node, char **envp);
 // exec_utils.c
 void	free_arr(char **arr);
 int		run_cmd(char **exec, char **envp);
 // prep_cmd.c
 char	**prep_cmd(t_cmd *cmd, char **envp);
 // exec_pipe.c
-void	function_tree_pipe_left(t_ast *node, char **envp, t_exec *info);
-void	function_tree_pipe_right(t_ast *node, char **envp, t_exec *info);
-void	function_tree_pipe(t_ast *node, char **envp);
+int		function_tree_pipe_left(t_ast *node, char **envp, t_exec *info);
+int		function_tree_pipe_right(t_ast *node, char **envp, t_exec *info);
+int		function_tree_pipe(t_ast *node, char **envp);
 // exec_parse_cmd.c
-void	parse_cmd(t_ast *node, char **envp);
+int	parse_cmd(t_ast *node, char **envp);
 #endif

@@ -6,31 +6,32 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 12:40:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/19 15:13:57 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/20 10:13:43 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-void	function_tree_pipe_left(t_ast *node, char **envp, t_exec *info)
+// Redirect the output into stdin.
+int	function_tree_pipe_left(t_ast *node, char **envp, t_exec *info)
 {
-	dup2(info->pipe_fd[0], 0);
+	dup2(info->pipe_fd[1], 1);
 	close(info->pipe_fd[0]);
 	close(info->pipe_fd[1]);
 	exec_main(node->left, envp);
 	exit(EXIT_SUCCESS);
 }
 
-void	function_tree_pipe_right(t_ast *node, char **envp, t_exec *info)
+int	function_tree_pipe_right(t_ast *node, char **envp, t_exec *info)
 {
-	dup2(info->pipe_fd[1], 1);
+	dup2(info->pipe_fd[0], 0);
 	close(info->pipe_fd[0]);
 	close(info->pipe_fd[1]);
 	exec_main(node->right, envp);
 	exit(EXIT_SUCCESS);
 }
 
-void	function_tree_pipe(t_ast *node, char **envp)
+int	function_tree_pipe(t_ast *node, char **envp)
 {
 	t_exec	info;
 
@@ -54,4 +55,5 @@ void	function_tree_pipe(t_ast *node, char **envp)
 	close(info.pipe_fd[1]);
 	waitpid(info.fork_pid[0], NULL, 0);
 	waitpid(info.fork_pid[1], NULL, 0);
+	return (0);
 }

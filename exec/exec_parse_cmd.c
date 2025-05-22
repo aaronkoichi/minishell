@@ -6,13 +6,13 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/19 18:09:44 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/20 08:05:37 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-void	parse_cmd_redir_append(t_ast *node, char **envp, char **command)
+int	parse_cmd_redir_append(t_ast *node, char **envp, char **command)
 {
 	int	fd;
 	int	fork_n;
@@ -31,12 +31,10 @@ void	parse_cmd_redir_append(t_ast *node, char **envp, char **command)
 	}
 	close(fd);
 	waitpid(fork_n, &status, 0);
-	if (status != 0)
-		;
-	return ;
+	return (status);
 }
 
-void	parse_cmd_redir_out(t_ast *node, char **envp, char **command)
+int	parse_cmd_redir_out(t_ast *node, char **envp, char **command)
 {
 	int	fd;
 	int	fork_n;
@@ -55,12 +53,10 @@ void	parse_cmd_redir_out(t_ast *node, char **envp, char **command)
 	}
 	close(fd);
 	waitpid(fork_n, &status, 0);
-	if (status != 0)
-		;
-	return ;
+	return (status);
 }
 
-void	parse_cmd_redir_in(t_ast *node, char **envp, char **command)
+int	parse_cmd_redir_in(t_ast *node, char **envp, char **command)
 {
 	int	fd;
 	int	fork_n;
@@ -79,12 +75,10 @@ void	parse_cmd_redir_in(t_ast *node, char **envp, char **command)
 	}
 	close(fd);
 	waitpid(fork_n, &status, 0);
-	if (status != 0)
-		;
-	return ;
+	return (status);
 }
 
-void	parse_cmd_fork(t_ast *node, char **envp, char **command)
+int	parse_cmd_fork(t_ast *node, char **envp, char **command)
 {
 	int	fork_n;
 	int	status;
@@ -96,12 +90,10 @@ void	parse_cmd_fork(t_ast *node, char **envp, char **command)
 		exit(EXIT_FAILURE);
 	}
 	waitpid(fork_n, &status, 0);
-	if (status != 0)
-		;
-	return ;
+	return (status);
 }
 
-void	parse_cmd(t_ast *node, char **envp)
+int	parse_cmd(t_ast *node, char **envp)
 {
 	int		status;
 	int		fork_n;
@@ -109,12 +101,12 @@ void	parse_cmd(t_ast *node, char **envp)
 
 	command = prep_cmd(node->cmd, envp);
 	if (node->cmd->redirs->type == REDIR_IN)
-		parse_cmd_redir_in(node, envp, command);
+		return (parse_cmd_redir_in(node, envp, command));
 	else if (node->cmd->redirs->type == REDIR_OUT)
-		parse_cmd_redir_out(node, envp, command);
+		return (parse_cmd_redir_out(node, envp, command));
 	else if (node->cmd->redirs->type == REDIR_APPEND)
-		parse_cmd_redir_append(node, envp, command);
+		return (parse_cmd_redir_append(node, envp, command));
 	else
-		parse_cmd_fork(node, envp, command);
+		return (parse_cmd_fork(node, envp, command));
 }
 
