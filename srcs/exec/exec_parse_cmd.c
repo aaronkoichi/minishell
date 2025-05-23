@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 14:45:07 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 16:52:47 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	redirect_fd(t_ast *node, t_redir **redirs)
 	int	status;
 
 	status = 0;
-	if (*redirs != NULL)
+	if (redirs != NULL)
 	{
 		if (redirs[0] != NULL)
 		{
@@ -51,7 +51,7 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
 		perror("execve\n");
 		exit (EXIT_FAILURE);
 	}
-	waitpid(fork_pid, &status, NULL);
+	waitpid(fork_pid, &status, 0);
 	free_arr(command);
 	return (status);
 }
@@ -64,7 +64,7 @@ int	parse_cmd(t_ast *node, char **envp)
 	t_redir	**redirs;
 
 	command = prep_cmd(node->cmd, envp);
-	if (node->cmd->redirs != NULL)
+	if (node->cmd->redir_count != 0)
 		redirs = determine_redir(node);
 	else
 		redirs = NULL;

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 14:23:16 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 17:24:08 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	redir_in(t_ast *node, t_redir *redir)
 	int	fd;
 
 	fd = 0;
-	if (redir->type == REDIR_IN)
+	if (redir->type == REDIR_HEREDOC)
 		write(0, redir->heredoc_content, ft_strlen(redir->heredoc_content));
 	else
 	{
@@ -56,10 +56,9 @@ t_redir		**determine_redir(t_ast *node)
 	t_redir		**redirs;
 	
 	head = &node->cmd->redirs;
-	redirs = malloc(2 * sizeof(t_redir));
+	redirs = ft_calloc(2, sizeof(t_redir));
 	if (!redirs)
 		return (NULL);
-	memset(redirs, 0, sizeof(t_redir));
 	while (*head)
 	{
 		if ((*head)->type == REDIR_IN || (*head)->type == REDIR_HEREDOC)

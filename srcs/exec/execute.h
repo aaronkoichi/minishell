@@ -6,13 +6,13 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 14:35:46 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 15:49:58 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTE_H
 # define EXECUTE_H
-# include "../includes/minishell.h"
+# include "../../includes/minishell.h"
 # include <unistd.h>
 # include <sys/wait.h>
 # include <stdlib.h>

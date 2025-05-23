@@ -6,12 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:23:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/14 21:02:38 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 16:54:40 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-#include "../libft/libft.h"
 
 static char	**find_full_cmd(char **path, char **cmd_arr, char **envp)
 {
@@ -67,12 +66,12 @@ static char	**init_cmd(int ac, char **av)
 	int		i;
 
 	i = 0;
-	cmd = malloc((ac) * sizeof(char *));
+	cmd = malloc((ac + 1) * sizeof(char *));
 	if (!cmd)
 		return (NULL);
-	while ((ac - 1 - i) != 0)
+	while ((ac - i) != 0)
 	{
-		cmd[i] = ft_strdup(av[i + 1]);
+		cmd[i] = ft_strdup(av[i]);
 		i++;
 	}
 	cmd[i] = NULL;
