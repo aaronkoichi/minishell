@@ -6,11 +6,27 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 16:52:47 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 20:36:58 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+
+void	touch_files(t_ast *node, t_redir **redirs)
+{
+	t_redir	*head;
+	int		fd;
+
+	head = node->cmd->redirs;
+	while (head != NULL)
+	{
+		if (ft_strncmp(head->filename, redirs[1]->filename,
+			ft_strlen(redirs[1]->filename)) != 0 && (head->type == REDIR_OUT
+			|| head->type == REDIR_APPEND))
+				fd = open(head->filename, O_CREAT, 0644);
+		head = head->next;
+	}
+}
 
 int	redirect_fd(t_ast *node, t_redir **redirs)
 {
@@ -52,7 +68,10 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
 		exit (EXIT_FAILURE);
 	}
 	waitpid(fork_pid, &status, 0);
+	if (status == 0)
+		touch_files(node, redirs);
 	free_arr(command);
+	free(*redirs);
 	return (status);
 }
 

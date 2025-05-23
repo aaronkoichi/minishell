@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 17:41:56 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 20:09:57 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	redir_out(t_ast *node, t_redir *redir)
 		fd = open(redir->filename, O_CREAT | O_APPEND | O_WRONLY, 0644);
 	if (fd < 0)
 	{
-		perror("output redirection\n");
+		perror("minishell: output redirection");
 		return (1);
 	}
 	dup2(fd, 1);
@@ -39,20 +39,21 @@ int	redir_in(t_ast *node, t_redir *redir)
 	if (redir->type == REDIR_HEREDOC)
 	{
 		if (pipe(fd) < 0)
-			perror("pipe\n");
+			perror("pipe");
 		write(fd[1], redir->heredoc_content, ft_strlen(redir->heredoc_content));
 		dup2(fd[0], 0);
 		close(fd[0]);
 		close(fd[1]);
+		return (0);
 	}
-	else
+	fd[0] = open(redir->filename, O_RDONLY);
+	if (fd[0] < 0)
 	{
-		fd[0] = open(redir->filename, O_RDONLY);
-		if (fd[0] < 0)
-			return (fd[0]);
-		dup2(fd[0], 0);
-		close(fd[0]);
+		perror("minishell: input redirection");
+		return (fd[0]);
 	}
+	dup2(fd[0], 0);
+	close(fd[0]);
 	return (0);
 }
 
