@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:00:24 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 17:17:07 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 17:42:19 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,13 @@ int main(int ac, char **av, char **envp)
 
 	// redirection test
 	node->left->cmd->redirs = malloc(sizeof(t_redir));
-	node->left->cmd->redirs->type = REDIR_IN;
-	node->left->cmd->redirs->filename = "redir_in";
+	node->left->cmd->redirs->type = REDIR_HEREDOC;
+	node->left->cmd->redirs->filename = NULL;
 	node->left->cmd->redirs->next = NULL;
-	node->left->cmd->redirs->heredoc_eof = NULL;
-	node->left->cmd->redirs->heredoc_content = NULL;
+	node->left->cmd->redirs->heredoc_eof = malloc(4 * sizeof(char));
+	node->left->cmd->redirs->heredoc_eof = "EOF";
+	node->left->cmd->redirs->heredoc_content = malloc(25 * sizeof(char));
+	node->left->cmd->redirs->heredoc_content = "this is a test sentence.\n";
 	exec_main(node, envp);
 	// // pipe Node
 	// node->left = ft_calloc(1, sizeof(t_ast));

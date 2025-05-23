@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 17:24:08 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 17:41:56 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,25 @@ int	redir_out(t_ast *node, t_redir *redir)
 
 int	redir_in(t_ast *node, t_redir *redir)
 {
-	int	fd;
+	int	fd[2];
 
-	fd = 0;
+	memset(fd, 0, sizeof(int[2]));
 	if (redir->type == REDIR_HEREDOC)
-		write(0, redir->heredoc_content, ft_strlen(redir->heredoc_content));
+	{
+		if (pipe(fd) < 0)
+			perror("pipe\n");
+		write(fd[1], redir->heredoc_content, ft_strlen(redir->heredoc_content));
+		dup2(fd[0], 0);
+		close(fd[0]);
+		close(fd[1]);
+	}
 	else
 	{
-		fd = open(redir->filename, O_RDONLY);
-		if (fd < 0)
-			return (fd);
-		dup2(fd, 0);
-		close(fd);
+		fd[0] = open(redir->filename, O_RDONLY);
+		if (fd[0] < 0)
+			return (fd[0]);
+		dup2(fd[0], 0);
+		close(fd[0]);
 	}
 	return (0);
 }
