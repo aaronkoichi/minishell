@@ -1,0 +1,77 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_parse_cmd_redirs.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
+/*   Updated: 2025/05/23 14:23:16 by zlee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "execute.h"
+
+int	redir_out(t_ast *node, t_redir *redir)
+{
+	int fd;
+
+	fd = 0;
+	if (redir->type == REDIR_OUT)
+		fd = open(redir->filename, O_CREAT | O_WRONLY, 0644);
+	else
+		fd = open(redir->filename, O_CREAT | O_APPEND | O_WRONLY, 0644);
+	if (fd < 0)
+	{
+		perror("output redirection\n");
+		return (1);
+	}
+	dup2(fd, 1);
+	close(fd);
+	return (0);
+}
+
+int	redir_in(t_ast *node, t_redir *redir)
+{
+	int	fd;
+
+	fd = 0;
+	if (redir->type == REDIR_IN)
+		write(0, redir->heredoc_content, ft_strlen(redir->heredoc_content));
+	else
+	{
+		fd = open(redir->filename, O_RDONLY);
+		if (fd < 0)
+			return (fd);
+		dup2(fd, 0);
+		close(fd);
+	}
+	return (0);
+}
+
+// t_redir [0] --> In | Heredoc, [1] --> Out | Append
+t_redir		**determine_redir(t_ast *node)
+{
+	t_redir		**head;
+	t_redir		**redirs;
+	
+	head = &node->cmd->redirs;
+	redirs = malloc(2 * sizeof(t_redir));
+	if (!redirs)
+		return (NULL);
+	memset(redirs, 0, sizeof(t_redir));
+	while (*head)
+	{
+		if ((*head)->type == REDIR_IN || (*head)->type == REDIR_HEREDOC)
+			redirs[0] = (*head);
+		head = &(*head)->next;
+	}
+	head = &node->cmd->redirs;
+	while(*head)
+	{
+		if ((*head)->type == REDIR_OUT | (*head)->type == REDIR_APPEND)
+			redirs[1] = (*head);
+		head = &(*head)->next;
+	}
+	return (redirs);
+}
