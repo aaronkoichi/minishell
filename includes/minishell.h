@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/23 13:12:09 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/23 14:25:59 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,50 +36,22 @@ typedef enum e_token_type
 	TOKEN_LPAREN,
 	TOKEN_RPAREN,
 	TOKEN_SEQUENCE,
-	TOKEN_EOF
+	TOKEN_EOF,
+	TOKEN_END
 }	t_token_type;
 
-/* changed structs
-typedef struct s_token
-{
-	t_token_type	type;
-	char			*content;
-}	t_token;
-
-typedef struct s_token_node
-{
-	t_token				*token;
-	struct s_token_node	*next;
-}	t_token_node;
-
-typedef struct s_token_list
-{
-	t_token_node	*head;
-	int				num_token;
-}	t_token_list;
-*/
-
-// added symbol map struct
 typedef struct s_sym_map
 {
 	const char		*symbol;
 	t_token_type	type;
 }	t_sym_map;
 
-// consolidated s_token and s_token_node
 typedef struct s_token
 {
 	t_token_type	type;
 	char			*content;
 	struct s_token	*next;
 }	t_token;
-
-// can remove this struct
-// typedef struct s_token_list
-// {
-// 	t_token	*head;
-// 	int		num_token;
-// }	t_token_list;
 
 typedef enum e_redir_type
 {
@@ -88,6 +60,12 @@ typedef enum e_redir_type
 	REDIR_APPEND,
 	REDIR_HEREDOC
 }	t_redir_type;
+
+typedef struct s_redir_map
+{
+	t_token_type	token_type;
+	t_redir_type	redir_type;
+}	t_redir_map;
 
 typedef struct s_redir
 {
@@ -141,6 +119,6 @@ int				ft_lstsize_token(t_token *lst);
 char			*token_word(char **str);
 
 // parse.c
-t_ast			*parse_token(t_token **token);
+t_ast			*parse_token(t_token *token);
 
 #endif

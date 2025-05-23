@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/22 12:23:22 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/23 14:34:38 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static const t_sym_map	*match_sym(const t_sym_map *table, char *str)
 {
 	size_t	len;
 
-	while (table->symbol)
+	while (table->symbol != NULL)
 	{
 		len = ft_strlen(table->symbol);
 		if (ft_strncmp(str, table->symbol, len) == 0)
