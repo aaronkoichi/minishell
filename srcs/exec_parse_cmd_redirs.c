@@ -6,13 +6,13 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 20:09:57 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/27 20:37:17 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-int	redir_out(t_ast *node, t_redir *redir)
+int	redir_out(t_redir *redir)
 {
 	int fd;
 
@@ -31,7 +31,7 @@ int	redir_out(t_ast *node, t_redir *redir)
 	return (0);
 }
 
-int	redir_in(t_ast *node, t_redir *redir)
+int	redir_in(t_redir *redir)
 {
 	int	fd[2];
 
@@ -76,7 +76,7 @@ t_redir		**determine_redir(t_ast *node)
 	head = &node->cmd->redirs;
 	while(*head)
 	{
-		if ((*head)->type == REDIR_OUT | (*head)->type == REDIR_APPEND)
+		if (((*head)->type == REDIR_OUT) || ((*head)->type == REDIR_APPEND))
 			redirs[1] = (*head);
 		head = &(*head)->next;
 	}

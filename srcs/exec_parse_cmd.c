@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 20:36:58 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/27 20:56:16 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	touch_files(t_ast *node, t_redir **redirs)
 	t_redir	*head;
 	int		fd;
 
+	fd = 0;
 	head = node->cmd->redirs;
 	while (head != NULL)
 	{
@@ -24,11 +25,13 @@ void	touch_files(t_ast *node, t_redir **redirs)
 			ft_strlen(redirs[1]->filename)) != 0 && (head->type == REDIR_OUT
 			|| head->type == REDIR_APPEND))
 				fd = open(head->filename, O_CREAT, 0644);
+		else
+			(void)fd;
 		head = head->next;
 	}
 }
 
-int	redirect_fd(t_ast *node, t_redir **redirs)
+int	redirect_fd(t_redir **redirs)
 {
 	int	status;
 
@@ -37,13 +40,13 @@ int	redirect_fd(t_ast *node, t_redir **redirs)
 	{
 		if (redirs[0] != NULL)
 		{
-			status = redir_in(node, redirs[0]);
+			status = redir_in(redirs[0]);
 			if (status < 0)
 				return (-1);
 		}
 		if (redirs[1] != NULL)
 		{
-			status = redir_out(node, redirs[1]);
+			status = redir_out(redirs[1]);
 			if (status < 0)
 				return (-1);
 		}
@@ -60,25 +63,23 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
 	fork_pid = fork();
 	if (fork_pid == 0)
 	{
-		status = redirect_fd(node, redirs);
+		status = redirect_fd(redirs);
 		if (status != 0)
 			exit (EXIT_FAILURE);
 		execve(command[0], command, envp);
-		perror("execve\n");
+		perror("execve");
 		exit (EXIT_FAILURE);
 	}
 	waitpid(fork_pid, &status, 0);
-	if (status == 0)
+	if (status == 0 && redirs[1] != NULL)
 		touch_files(node, redirs);
 	free_arr(command);
-	free(*redirs);
+	free(redirs);
 	return (status);
 }
 
-int	parse_cmd(t_ast *node, char **envp)
+int	exec_cmd_main(t_ast *node, char **envp)
 {
-	int		status;
-	int		fork_n;
 	char	**command;
 	t_redir	**redirs;
 

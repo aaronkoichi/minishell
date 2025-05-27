@@ -21,6 +21,12 @@ SRCS_LIST = main.c				\
 			token_symbol.c		\
 			token_utils.c		\
 			token_word.c		\
+			exec_main.c	\
+			exec_parse_cmd.c \
+			exec_parse_cmd_redirs.c \
+			exec_pipe.c	\
+			exec_utils.c	\
+			prep_cmd.c		\
 
 OBJS_DIR = objs
 OBJS = $(SRCS_LIST:.c=.o)

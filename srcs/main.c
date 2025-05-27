@@ -6,11 +6,12 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/27 11:52:38 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/27 20:49:44 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 
 // ------------------------- test print token ---------------------------------
 void	test_print_tokens(t_token *token_list)
@@ -184,7 +185,7 @@ void test_print_ast_tree(t_ast *root) {
 // 	return (true);
 // }
 
-int	main(int argc, char *argv[])
+int	main(int argc, char *argv[], char *envp[])
 {
 	char	*input;
 	t_token	*token_list;
@@ -218,6 +219,7 @@ int	main(int argc, char *argv[])
 			continue ;
 		}
 		test_print_ast_tree(ast_tree);
+		exec_main(ast_tree, envp);
 		ft_lstclear_ast_tree(&ast_tree);
 		ft_lstclear_token(&token_list);
 		free(input);

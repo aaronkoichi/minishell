@@ -6,17 +6,16 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:23:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/23 16:54:40 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/27 20:26:31 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-static char	**find_full_cmd(char **path, char **cmd_arr, char **envp)
+static char	**find_full_cmd(char **path, char **cmd_arr)
 {
 	char	*new_path;
 	int		i;
-	int		pid;
 
 	i = -1;
 	while(path[++i])
@@ -57,7 +56,7 @@ static char	**prep_envp_cmd(char **cmd_arr, char **envp)
 	temp = ft_strjoin("/", cmd_arr[0]);
 	free(cmd_arr[0]);
 	cmd_arr[0] = temp;
-	return (find_full_cmd(path, cmd_arr, envp));
+	return (find_full_cmd(path, cmd_arr));
 }
 
 static char	**init_cmd(int ac, char **av)

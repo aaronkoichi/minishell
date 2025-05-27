@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/27 12:21:14 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/27 12:52:28 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "../libft/includes/libft.h"
-
 # include <stdlib.h>
 # include <stdbool.h>
 # include <stdio.h>

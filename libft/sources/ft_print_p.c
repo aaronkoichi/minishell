@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 16:17:40 by jthiew            #+#    #+#             */
-/*   Updated: 2025/02/03 16:25:28 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:53:27 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 int	ft_print_p_logic(unsigned long p, char *adr_str, int adr_len)
 {
-	int	count;
-
-	count = 0;
 	if (p == 0)
 	{
 		ft_putstr_fd(adr_str, 1);
