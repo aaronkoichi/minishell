@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/27 22:21:13 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/27 22:48:35 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,14 @@ int	redirect_fd(t_redir **redirs)
 int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
 {
 	int	status;
-	int	status_redir;
 	int	fork_pid;
 
 	status = 0;
-	status_redir = 0;
 	fork_pid = fork();
 	if (fork_pid == 0)
 	{
-		status_redir = redirect_fd(redirs);
-		if (status_redir != 0)
+		status = redirect_fd(redirs);
+		if (status != 0)
 			exit (EXIT_FAILURE);
 		execve(command[0], command, envp);
 		perror("execve");
