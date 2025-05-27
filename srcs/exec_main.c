@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/27 20:28:18 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/27 22:22:55 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	function_tree_subshell(t_ast *node, char **envp)
 	if (info.fork_pid[0] < 0)
 		perror("subshell\n");
 	if (info.fork_pid[0] == 0)
-		exec_main(node->left, envp);
+		return (exec_main(node->left, envp));
 	else
 		waitpid(info.fork_pid[0], &info.status, 0);
 	return (info.status);
@@ -37,16 +37,17 @@ int	function_tree_subshell(t_ast *node, char **envp)
 int	function_tree_and(t_ast *node, char **envp)
 {
 	t_exec	info;
+	int		status;
 
+	status = 0;
 	memset(&info, 0, sizeof(t_exec));
 	info.fork_pid[0]= fork();
 	if (info.fork_pid[0] < 0)
 		perror("Fork Error\n");
 	else if (info.fork_pid[0] == 0)
-		exec_main(node->left, envp);
-	else
-		waitpid(info.fork_pid[0], &info.status, 0);
-	if (info.status == 0)
+		exit (exec_main(node->left, envp));
+	waitpid(info.fork_pid[0], &status, 0);
+	if (WEXITSTATUS(status) == 0)
 		exec_main(node->right, envp);
 	return (info.status);
 }
@@ -54,16 +55,17 @@ int	function_tree_and(t_ast *node, char **envp)
 int	function_tree_or(t_ast *node, char **envp)
 {
 	t_exec	info;
+	int		status;
 
+	status = 0;
 	memset(&info, 0, sizeof(t_exec));
 	info.fork_pid[0]= fork();
 	if (info.fork_pid[0] < 0)
 		perror("Fork Error\n");
 	else if (info.fork_pid[0] == 0)
-		exec_main(node->left, envp);
-	else
-		waitpid(info.fork_pid[0], &info.status, 0);
-	if (info.status != 0)
+		exit (exec_main(node->left, envp));
+	waitpid(info.fork_pid[0], &status, 0);
+	if (WEXITSTATUS(status) != 0)
 		exec_main(node->right, envp);
 	return (info.status);
 }
