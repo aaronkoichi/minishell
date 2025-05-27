@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/27 22:47:20 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/27 23:37:27 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ int	function_tree(t_ast *node, char **envp)
 
 int	exec_main(t_ast *node, char **envp)
 {
+	if (node == NULL || node->cmd->argc == 0)
+		return (0);
 	if (node->type == NODE_ROOT)
 		return (exec_main(node->left, envp));
-	if (node == NULL)
-		return (0);
 	else
 		return (function_tree(node, envp));
 }
