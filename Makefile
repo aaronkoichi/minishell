@@ -10,11 +10,17 @@ INCLUDES = -I$(HEADERS_DIR) -I$(LIBFT_INCLUDES)
 
 SRCS_DIR = ./srcs/
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_LIST))
-SRCS_LIST = main.c	\
-			token.c	\
-			token_symbol.c	\
-			token_utils.c	\
-			token_word.c	\
+SRCS_LIST = main.c				\
+			parse_cmd.c			\
+			parse_rdp_1.c		\
+			parse_rdp_2.c		\
+			parse_redir.c		\
+			parse_redir_utils.c	\
+			parse_utils.c		\
+			token.c				\
+			token_symbol.c		\
+			token_utils.c		\
+			token_word.c		\
 
 OBJS_DIR = objs
 OBJS = $(SRCS_LIST:.c=.o)

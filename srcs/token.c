@@ -6,13 +6,17 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/23 14:34:38 by jthiew           ###   ########.fr       */
+=======
+/*   Updated: 2025/05/26 14:39:46 by jthiew           ###   ########.fr       */
+>>>>>>> 382a5b90820d9d64723eecd6b1f99c1d42123032
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*create_token(t_token_type type, char *content)
+t_token	*create_token_node(t_token_type type, char *content)
 {
 	t_token	*token;
 
@@ -48,7 +52,7 @@ void	get_type_content(t_token_type *type, char **content, char **str)
 {
 	const t_sym_map	*match;
 
-	match = match_sym(get_double_sym(), *str);
+	match = match_sym(get_double_or_triple_sym(), *str);
 	if (match != NULL)
 	{
 		*type = match->type;
@@ -75,7 +79,7 @@ int	create_and_add_token(t_token_type type, char *content, t_token **head)
 {
 	t_token			*token;
 
-	token = create_token(type, content);
+	token = create_token_node(type, content);
 	if (token == NULL)
 	{
 		ft_lstclear_token(head);
@@ -85,7 +89,6 @@ int	create_and_add_token(t_token_type type, char *content, t_token **head)
 	return (0);
 }
 
-// TODO handle parse error like <<<< and >>>
 t_token	*tokenize_str(char *str)
 {
 	t_token			*head;
