@@ -5,12 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/23 14:25:59 by jthiew           ###   ########.fr       */
-=======
 /*   Updated: 2025/05/26 21:21:56 by jthiew           ###   ########.fr       */
->>>>>>> 382a5b90820d9d64723eecd6b1f99c1d42123032
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +35,6 @@ typedef enum e_token_type
 	TOKEN_LPAREN,
 	TOKEN_RPAREN,
 	TOKEN_SEQUENCE,
-<<<<<<< HEAD
-	TOKEN_EOF,
-	TOKEN_END
-=======
 	TOKEN_ANDPS,
 	TOKEN_HERESTR,
 	TOKEN_FD_IN,
@@ -52,7 +43,6 @@ typedef enum e_token_type
 	TOKEN_CASE_NEXT,
 	TOKEN_CASE_RE_NEXT,
 	TOKEN_EOF
->>>>>>> 382a5b90820d9d64723eecd6b1f99c1d42123032
 }	t_token_type;
 
 typedef struct s_sym_map
@@ -169,11 +159,4 @@ bool			is_valid_redir(t_token *token);
 
 // token_word.c
 char			*token_word(char **str);
-
-<<<<<<< HEAD
-// parse.c
-t_ast			*parse_token(t_token *token);
-
-=======
->>>>>>> 382a5b90820d9d64723eecd6b1f99c1d42123032
 #endif
