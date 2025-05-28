@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/27 22:48:35 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/28 17:16:13 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
 	int	fork_pid;
 
 	status = 0;
-	fork_pid = fork();
+	fork_pid = -2;
+	if (builtin_functions(command, envp))
+		fork_pid = fork();
 	if (fork_pid == 0)
 	{
 		status = redirect_fd(redirs);
