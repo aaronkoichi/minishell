@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/27 20:49:44 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/28 20:32:10 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,9 +190,14 @@ int	main(int argc, char *argv[], char *envp[])
 	char	*input;
 	t_token	*token_list;
 	t_ast	*ast_tree;
+	int		i;
 
+	i = 0;
+	while (envp[i])
+		i++;
 	(void)argv;
 	(void)argc;
+	envp = dup_envp(envp, i);
 	while (1)
 	{
 		input = readline("minishell$ ");

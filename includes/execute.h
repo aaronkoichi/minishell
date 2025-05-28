@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/28 17:15:53 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/28 20:30:06 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,7 @@ int			redir_in(t_redir *redir);
 t_redir		**determine_redir(t_ast *node);
 // exec_builtin_func.c
 int			builtin_functions(char **cmd, char **envp);
+// exec_dup_envp.c
+char		**dup_envp(char **envp, int	len);
+char 		**append_envp(char **envp, char *var);
 #endif
