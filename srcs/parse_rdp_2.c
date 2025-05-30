@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:48:16 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/29 12:34:12 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:50:12 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,10 @@ t_cmd	*parse_cmd(t_token **token)
 t_ast	*parse_subshell(t_token **token, int *is_error)
 {
 	t_ast	*subshell;
+	t_cmd	*cmd;
 
 	*token = (*token)->next;
-	subshell = parse_or(token, is_error);
+	subshell = parse_sequence(token, is_error);
 	if ((*token)->type != TOKEN_RPAREN)
 	{
 		ft_putstr_fd("Opps, minishell no likey unclosed parenthesis\n", 2);
@@ -39,7 +40,8 @@ t_ast	*parse_subshell(t_token **token, int *is_error)
 		return (NULL);
 	}
 	*token = (*token)->next;
-	return (create_ast_node(NODE_SUBSHELL, subshell, NULL, NULL));
+	cmd = parse_cmd(token);
+	return (create_ast_node(NODE_SUBSHELL, subshell, NULL, cmd));
 }
 
 t_ast	*parse_cmd_or_subshell(t_token **token, int *is_error)

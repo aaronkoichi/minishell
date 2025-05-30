@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/30 14:22:13 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/30 15:27:02 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,13 +139,16 @@ void print_command(t_cmd *cmd, const char *prefix, int is_last)
 	int	i;
 
 	i = 0;
-	printf("%s%sCommand: ", prefix, is_last ? "└──" : "├──");
-	while (i < cmd->argc)
+	if (cmd->argc != 0)
 	{
-		printf("%s ", cmd->argv[i]);
-		i++;
+		printf("%s%sCommand: ", prefix, is_last ? "└──" : "├──");
+		while (i < cmd->argc)
+		{
+			printf("%s ", cmd->argv[i]);
+			i++;
+		}
+		printf("\n");
 	}
-	printf("\n");
 	if (cmd->redirs != NULL)
 		print_redirs(cmd->redirs, prefix);
 }
@@ -166,6 +169,8 @@ void print_ast_node(t_ast *node, int level, const char *prefix, int is_last)
 				prefix, is_last ? "   " : "│  ");
 	if (node->type == NODE_COMMAND)
 		print_command(node->cmd, new_prefix, 1);
+	if (node->type == NODE_SUBSHELL && node->cmd->redirs != NULL)
+		print_redirs(node->cmd->redirs, prefix);
 	has_left = 0;
 	has_right = 0;
 	if (node->left != NULL)
@@ -227,26 +232,26 @@ void test_print_ast_tree(t_ast *root) {
 volatile sig_atomic_t	g_signal = 0;
 // TODO: $? exit code 130 for SIGINT --> ctrl + c
 
-t_ast	*parse_input(char *input)
+t_ast	*parse_input(t_token **token_list, char *input)
 {
-	t_token	*token_list;
+	// t_token	*token_list;
 	t_ast	*ast_tree;
 
-	token_list = tokenize_str(input);
+	*token_list = tokenize_str(input);
 	if (token_list == NULL)
 	{
 		free(input);
 		return (NULL);
 	}
-	// test_print_tokens(token_list);
-	ast_tree = parse_token(token_list);
+	test_print_tokens(*token_list);
+	ast_tree = parse_token(*token_list);
 	if (ast_tree == NULL)
 	{
 		free(input);
-		ft_lstclear_token(&token_list);
+		ft_lstclear_token(token_list);
 		return (NULL);
 	}
-	// test_print_ast_tree(ast_tree);
+	test_print_ast_tree(ast_tree);
 	return (ast_tree);
 }
 
@@ -263,7 +268,7 @@ void	start_usr_input(void)
 		if (input == NULL)
 			break ;
 		add_history(input);
-		ast_tree = parse_input(input);
+		ast_tree = parse_input(&token_list, input);
 		if (ast_tree == NULL)
 			continue ;
 		// exec_main(ast_tree, envp);
