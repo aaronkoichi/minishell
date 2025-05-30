@@ -6,68 +6,97 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:42:45 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/25 19:43:17 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/29 16:03:15 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*parse_pipe(t_token **token)
+t_ast	*parse_pipe(t_token **token, int *is_error)
 {
 	t_ast	*left;
 	t_ast	*right;
 
-	left = parse_cmd_or_subshell(token);
+	left = parse_async(token, is_error);
 	while (*token != NULL && (*token)->type == TOKEN_PIPE)
 	{
+		if (is_parse_err(*token) == true)
+		{
+			ft_lstclear_ast_tree(&left);
+			*is_error = 1;
+			return (NULL);
+		}
 		*token = (*token)->next;
-		right = parse_cmd_or_subshell(token);
+		right = parse_async(token, is_error);
 		left = create_ast_node(NODE_PIPE, left, right, NULL);
 	}
 	return (left);
 }
 
-t_ast	*parse_and(t_token **token)
+t_ast	*parse_and(t_token **token, int *is_error)
 {
 	t_ast	*left;
 	t_ast	*right;
 
-	left = parse_pipe(token);
+	left = parse_pipe(token, is_error);
 	while (*token != NULL && (*token)->type == TOKEN_AND)
 	{
+		if (is_parse_err(*token) == true)
+		{
+			ft_lstclear_ast_tree(&left);
+			*is_error = 1;
+			return (NULL);
+		}
 		*token = (*token)->next;
-		right = parse_pipe(token);
+		right = parse_pipe(token, is_error);
 		left = create_ast_node(NODE_AND, left, right, NULL);
 	}
 	return (left);
 }
 
-t_ast	*parse_or(t_token **token)
+t_ast	*parse_or(t_token **token, int *is_error)
 {
 	t_ast	*left;
 	t_ast	*right;
 
-	left = parse_and(token);
+	left = parse_and(token, is_error);
 	while (*token != NULL && (*token)->type == TOKEN_OR)
 	{
+		if (is_parse_err(*token) == true)
+		{
+			ft_lstclear_ast_tree(&left);
+			*is_error = 1;
+			return (NULL);
+		}
 		*token = (*token)->next;
-		right = parse_and(token);
+		right = parse_and(token, is_error);
 		left = create_ast_node(NODE_OR, left, right, NULL);
 	}
 	return (left);
 }
 
-t_ast	*parse_sequence(t_token **token)
+t_ast	*parse_sequence(t_token **token, int *is_error)
 {
 	t_ast	*left;
 	t_ast	*right;
 
-	left = parse_or(token);
+	left = parse_or(token, is_error);
 	while (*token != NULL && (*token)->type == TOKEN_SEQUENCE)
 	{
+		if (is_parse_err(*token) == true)
+		{
+			ft_lstclear_ast_tree(&left);
+			*is_error = 1;
+			return (NULL);
+		}
 		*token = (*token)->next;
-		right = parse_or(token);
-		left = create_ast_node(NODE_SEQUENCE, left, right, NULL);
+		if ((*token)->type != TOKEN_EOF)
+		{
+			right = parse_or(token, is_error);
+			left = create_ast_node(NODE_SEQUENCE, left, right, NULL);
+		}
+		else
+			left = create_ast_node(NODE_SEQUENCE, left, NULL, NULL);
 	}
 	return (left);
 }
@@ -75,7 +104,24 @@ t_ast	*parse_sequence(t_token **token)
 t_ast	*parse_token(t_token *token)
 {
 	t_ast	*root;
+	int		is_error;
 
-	root = parse_sequence(&token);
+	if (token->type == TOKEN_EOF)
+		return (NULL);
+	if (!(token->type == TOKEN_WORD || token->type == TOKEN_LPAREN
+			|| is_token_redirs(token) == true))
+	{
+		print_unexpected_token(token->content);
+		return (NULL);
+	}
+	is_error = 0;
+	root = parse_sequence(&token, &is_error);
+	if (is_error == 1 || token->type == TOKEN_RPAREN)
+	{
+		if (token->type == TOKEN_RPAREN)
+			print_unexpected_token(token->content);
+		ft_lstclear_ast_tree(&root);
+		return (NULL);
+	}
 	return (root);
 }

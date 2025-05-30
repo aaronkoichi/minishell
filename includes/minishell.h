@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/26 21:21:56 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:00:59 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
+# include <signal.h>
 # include <unistd.h>
+# include <term.h>
+# include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -36,7 +39,7 @@ typedef enum e_token_type
 	TOKEN_LPAREN,
 	TOKEN_RPAREN,
 	TOKEN_SEQUENCE,
-	TOKEN_ANDPS,
+	TOKEN_ASYNC,
 	TOKEN_HERESTR,
 	TOKEN_FD_IN,
 	TOKEN_FD_OUT,
@@ -64,7 +67,10 @@ typedef enum e_redir_type
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,
-	REDIR_HEREDOC
+	REDIR_HEREDOC,
+	REDIR_HERESTR,
+	REDIR_FD_IN,
+	REDIR_FD_OUT
 }	t_redir_type;
 
 typedef struct s_redir_map
@@ -109,33 +115,48 @@ typedef struct s_ast
 	t_cmd			*cmd;
 }	t_ast;
 
+extern volatile sig_atomic_t	g_signal;
+
 // parse_cmd.c
-int				get_cmd_argc(t_token *token, t_cmd *cmd);
-char			**get_cmd_argv(t_token *token, t_cmd *cmd);
-int				create_and_add_redir(t_token **token, t_redir **head);
-t_redir			*get_cmd_redirs(t_token *token, t_cmd *cmd);
+t_cmd			*init_cmd(t_token *token);
 
 // parse_rdp_1.c
+t_ast			*parse_pipe(t_token **token, int *is_error);
+t_ast			*parse_and(t_token **token, int *is_error);
+t_ast			*parse_or(t_token **token, int *is_error);
+t_ast			*parse_sequence(t_token **token, int *is_error);
 t_ast			*parse_token(t_token *token);
-t_ast			*parse_or(t_token **token);
 
 // parse_rdp_2.c
-t_ast			*parse_cmd_or_subshell(t_token **token);
+t_cmd			*parse_cmd(t_token **token);
+t_ast			*parse_subshell(t_token **token, int *is_error);
+t_ast			*parse_cmd_or_subshell(t_token **token, int *is_error);
+t_ast			*parse_cterm(t_token **token, int *is_error);
+t_ast			*parse_async(t_token **token, int *is_error);
 
 // parse_redir.c
-char			*get_hdoc_content(char *eof);
+t_redir			*create_redir_node(t_token **token);
+
+// parse_redir_type.c
 t_redir_type	get_redir_type(t_token *token);
 
 // parse_redir_utils.c
 void			ft_lstadd_back_redir(t_redir **lst, t_redir *new);
 void			ft_lstclear_redir(t_redir **lst);
-int				ft_lstsize_redir(t_redir *lst);
-bool			is_token_redirs(t_token *token);
+int				is_supported_redir(t_token *token);
+char			*strip_quotes_eof(char *str);
 
 // parse_utils.c
 t_ast			*create_ast_node(t_node_type type, t_ast *left,
 					t_ast *right, t_cmd *cmd);
 void			ft_lstclear_ast_tree(t_ast **ast);
+void			print_unexpected_token(char *content);
+void			print_bad_ending(char *content);
+bool			is_parse_err(t_token *token);
+
+// signal.c
+void			handle_sigint(int sig);
+void			configure_signal(void);
 
 // token.c
 t_token			*tokenize_str(char *str);
@@ -147,18 +168,13 @@ const t_sym_map	*get_single_sym(void);
 // token_utils.c
 void			ft_lstadd_back_token(t_token **lst, t_token *new);
 void			ft_lstclear_token(t_token **token);
-int				ft_lstsize_token(t_token *lst);
-
-// token_valid_case.c
-bool			is_valid_case(t_token *token);
-
-// token_valid_op.c
-bool			is_valid_op(t_token *token);
-
-// token_valid_redir.c
-bool			is_valid_redir(t_token *token);
+bool			is_token_ops(t_token *token);
+bool			is_token_cterm(t_token *token);
+bool			is_token_redirs(t_token *token);
 
 // token_word.c
 char			*token_word(char **str);
+
+void			start_usr_input(void);
 
 #endif

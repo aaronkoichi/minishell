@@ -6,13 +6,13 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:46:29 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/26 12:55:01 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:01:17 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*append_line(char *content, char *input, int ind)
+char	*append_line(char *content, char *input, int ind)
 {
 	char	*temp;
 	char	*joined;
@@ -36,7 +36,26 @@ static char	*append_line(char *content, char *input, int ind)
 	return (joined);
 }
 
-char	*get_hdoc_content(char *eof)
+int	hdoc_handle_input(char *input, char *content)
+{
+	if (g_signal == 2)
+	{
+		free(input);
+		free(content);
+		g_signal = 0;
+		content = NULL;
+		return (1);
+	}
+	if (input == NULL)
+	{
+		ft_putstr_fd("heredoc delimited by EOF\n", 1);
+		g_signal = 0;
+		return (1);
+	}
+	return (0);
+}
+
+char	*get_hdoc_input(char *eof)
 {
 	char	*content;
 	char	*input;
@@ -48,12 +67,11 @@ char	*get_hdoc_content(char *eof)
 		return (NULL);
 	while (1)
 	{
-		input = readline("heredoc>");
-		if (input == NULL)
-		{
-			free(content);
-			return (NULL);
-		}
+		g_signal = 1;
+		input = readline("heredoc> ");
+		if (hdoc_handle_input(input, content) == 1)
+			break ;
+		g_signal = 0;
 		if (ft_strncmp(input, eof, ft_strlen(eof) + 1) == 0)
 			break ;
 		content = append_line(content, input, i);
@@ -65,38 +83,44 @@ char	*get_hdoc_content(char *eof)
 	return (content);
 }
 
-const t_redir_map	*get_redir_map(void)
+char	*get_hdoc_content(char *eof)
 {
-	static const t_redir_map	table[] = {
-	{TOKEN_APPEND, REDIR_APPEND},
-	{TOKEN_REDIR_IN, REDIR_IN},
-	{TOKEN_REDIR_OUT, REDIR_OUT},
-	{TOKEN_HEREDOC, REDIR_HEREDOC},
-	{TOKEN_EOF, 0}
-	};
+	char	*content;
+	char	*eof_strip;
 
-	return (table);
+	eof_strip = strip_quotes_eof(eof);
+	if (eof_strip == NULL)
+		return (NULL);
+	content = get_hdoc_input(eof_strip);
+	free(eof_strip);
+	if (content == NULL)
+		return (NULL);
+	return (content);
 }
 
-static const t_redir_map	*match_redir(const t_redir_map *table,
-								t_token_type type)
+t_redir	*create_redir_node(t_token **token)
 {
-	while (table->token_type != TOKEN_EOF)
+	t_redir	*redir;
+
+	if (is_parse_err(*token) == true || is_supported_redir(*token) == false)
+		return (NULL);
+	redir = ft_calloc(1, sizeof(t_redir));
+	if (redir == NULL)
+		return (NULL);
+	redir->type = get_redir_type(*token);
+	if ((*token)->type == TOKEN_HEREDOC)
 	{
-		if (table->token_type == type)
-			return (table);
-		table++;
+		redir->heredoc_eof = (*token)->next->content;
+		redir->heredoc_content = get_hdoc_content(redir->heredoc_eof);
+		if (redir->heredoc_content == NULL)
+		{
+			free(redir);
+			return (NULL);
+		}
 	}
-	return (NULL);
-}
-
-t_redir_type	get_redir_type(t_token *token)
-{
-	const t_redir_map	*match;
-
-	match = match_redir(get_redir_map(), token->type);
-	if (match != NULL)
-		return (match->redir_type);
 	else
-		return (0);
+		redir->filename = (*token)->next->content;
+	*token = (*token)->next;
+	redir->next = NULL;
+	return (redir);
 }

@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/26 14:39:46 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/29 14:38:45 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ t_token	*create_token_node(t_token_type type, char *content)
 {
 	t_token	*token;
 
+	if (content == NULL)
+		return (NULL);
 	token = malloc(1 * sizeof(t_token));
 	if (token == NULL)
 		return (NULL);
@@ -103,7 +105,7 @@ t_token	*tokenize_str(char *str)
 				return (NULL);
 		}
 	}
-	if (create_and_add_token(TOKEN_EOF, ft_strdup("\0"), &head) == 1)
+	if (create_and_add_token(TOKEN_EOF, ft_strdup("newline"), &head) == 1)
 		return (NULL);
 	return (head);
 }

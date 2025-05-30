@@ -6,13 +6,29 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/27 11:52:38 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:22:13 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <signal.h>
 
 // ------------------------- test print token ---------------------------------
+int	ft_lstsize_token(t_token *lst)
+{
+	int	size;
+
+	size = 0;
+	while (lst != NULL)
+	{
+		size++;
+		lst = lst->next;
+	}
+	return (size);
+}
+
 void	test_print_tokens(t_token *token_list)
 {
 	int	i;
@@ -174,54 +190,104 @@ void test_print_ast_tree(t_ast *root) {
 }
 // ---------------------------- test print tree --------------------
 
-// bool	is_valid_tokens(t_token *token)
-// {
-// 	if (is_valid_case(token) == false || is_valid_redir(token) == false)
-// 		// || is_valid_op(token) == false)
-// 	{
-// 		return (false);
-// 	}
-// 	return (true);
-// }
+// Limitations of minishell:
+// - does not handle unclosed quotes
+// 	(return NULL for token->content)
+//
+// - does not handle line continuation, a.k.a backslash character --> '\'
+// 	(treat as valid word character)
+//
+// - does not handle commenting --> '#'
+//	(treat as valid word character)
+//
+// - does not handle command ending with list delimiters --> '|', '&', ';', etc
+// 	(return NULL for ast_tree node, parsing error)
+//
+// - does not handle here_string redirection --> "<<<"
+// 	(return NULL for redir node, parsing error)
+//
+// - does not handle fd_in & fd_out redirection --> "<&", ">&"
+// 	(return NULL for redir node, parsing error)
+//
+// - does not handle async execution --> '&'
+// 	(return NULL for ast_tree node, parsing error)
+//
+// - does not handle unclosed parenthesis
+// 	(return NULL for ast_tree node, parsing error)
+//
+// - does not handle arithmetic expansion
+// 	(treat as subshell in another subshell)
+//
+// - does not handle case conditional construct --> case `word' in
+//	(non-existent behaviour)
+//
+// - does not handle loops --> `while', `for'
+//	(non-existent behaviour)
 
-int	main(int argc, char *argv[])
+volatile sig_atomic_t	g_signal = 0;
+// TODO: $? exit code 130 for SIGINT --> ctrl + c
+
+t_ast	*parse_input(char *input)
+{
+	t_token	*token_list;
+	t_ast	*ast_tree;
+
+	token_list = tokenize_str(input);
+	if (token_list == NULL)
+	{
+		free(input);
+		return (NULL);
+	}
+	// test_print_tokens(token_list);
+	ast_tree = parse_token(token_list);
+	if (ast_tree == NULL)
+	{
+		free(input);
+		ft_lstclear_token(&token_list);
+		return (NULL);
+	}
+	// test_print_ast_tree(ast_tree);
+	return (ast_tree);
+}
+
+// void	start_usr_input(char *envp[])
+void	start_usr_input(void)
 {
 	char	*input;
 	t_token	*token_list;
 	t_ast	*ast_tree;
 
-	(void)argv;
-	(void)argc;
 	while (1)
 	{
 		input = readline("minishell$ ");
 		if (input == NULL)
-			return (1);
-		token_list = tokenize_str(input);
-		if (token_list == NULL)
-		{
-			free(input);
-			continue ;
-		}
-		test_print_tokens(token_list);
-		// if (is_valid_tokens(token_list) == false)
-		// {
-		// 	free(input);
-		// 	ft_lstclear_token(&token_list);
-		// 	continue ;
-		// }
-		ast_tree = parse_token(token_list);
+			break ;
+		add_history(input);
+		ast_tree = parse_input(input);
 		if (ast_tree == NULL)
-		{
-			free(input);
-			ft_lstclear_token(&token_list);
 			continue ;
-		}
-		test_print_ast_tree(ast_tree);
+		// exec_main(ast_tree, envp);
 		ft_lstclear_ast_tree(&ast_tree);
 		ft_lstclear_token(&token_list);
 		free(input);
-		// start execute command
 	}
+	rl_clear_history();
+}
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	int					i;
+
+	configure_signal();
+	rl_catch_signals = 0;
+	i = 0;
+	while (envp[i])
+		i++;
+	(void)argv;
+	(void)argc;
+	(void)envp;
+	// envp = dup_envp(envp, i);
+	start_usr_input();
+	// start_usr_input(envp);
 	return (0);
 }

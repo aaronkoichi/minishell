@@ -15,8 +15,10 @@ SRCS_LIST = main.c				\
 			parse_rdp_1.c		\
 			parse_rdp_2.c		\
 			parse_redir.c		\
+			parse_redir_type.c	\
 			parse_redir_utils.c	\
 			parse_utils.c		\
+			signal.c			\
 			token.c				\
 			token_symbol.c		\
 			token_utils.c		\
@@ -36,7 +38,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)%.c
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS_DIR) $(OBJS_PATH)
-	@$(CC) $(CFLAGS) $(OBJS_PATH) -lreadline $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS_PATH) -lreadline -ltermcap $(LIBFT) -o $(NAME)
 	@echo "$(NAME) created"
 
 $(LIBFT):

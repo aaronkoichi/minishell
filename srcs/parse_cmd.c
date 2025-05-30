@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:45:16 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/26 12:54:18 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/29 14:26:01 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 int	get_cmd_argc(t_token *token, t_cmd *cmd)
 {
 	int	total_size;
-	int	redir_size;
 
-	redir_size = ft_lstsize_redir(cmd->redirs) * 2;
 	total_size = 0;
 	while (token != NULL && (is_token_redirs(token) == true
 			|| token->type == TOKEN_WORD))
@@ -25,7 +23,7 @@ int	get_cmd_argc(t_token *token, t_cmd *cmd)
 		total_size++;
 		token = token->next;
 	}
-	return (total_size - redir_size);
+	return (total_size - (cmd->redir_count * 2));
 }
 
 char	**get_cmd_argv(t_token *token, t_cmd *cmd)
@@ -52,33 +50,6 @@ char	**get_cmd_argv(t_token *token, t_cmd *cmd)
 	return (argv);
 }
 
-t_redir	*create_redir_node(t_token **token)
-{
-	t_redir	*redir;
-	t_token	*temp;
-
-	temp = *token;
-	redir = ft_calloc(1, sizeof(t_redir));
-	if (redir == NULL)
-		return (NULL);
-	redir->type = get_redir_type(temp);
-	*token = (*token)->next;
-	if (temp->type != TOKEN_HEREDOC)
-		redir->filename = (*token)->content;
-	else
-	{
-		redir->heredoc_eof = (*token)->content;
-		redir->heredoc_content = get_hdoc_content(redir->heredoc_eof);
-		if (redir->heredoc_content == NULL)
-		{
-			free(redir);
-			return (NULL);
-		}
-	}
-	redir->next = NULL;
-	return (redir);
-}
-
 int	create_and_add_redir(t_token **token, t_redir **head)
 {
 	t_redir	*redir;
@@ -103,8 +74,6 @@ t_redir	*get_cmd_redirs(t_token *token, t_cmd *cmd)
 	{
 		if (is_token_redirs(token) == true)
 		{
-			if (cmd->redir_count == -1)
-				cmd->redir_count = 0;
 			cmd->redir_count++;
 			if (create_and_add_redir(&token, &head) == 1)
 				return (NULL);
@@ -112,4 +81,29 @@ t_redir	*get_cmd_redirs(t_token *token, t_cmd *cmd)
 		token = token->next;
 	}
 	return (head);
+}
+
+t_cmd	*init_cmd(t_token *token)
+{
+	t_cmd	*cmd;
+
+	cmd = malloc(1 * sizeof(t_cmd));
+	if (cmd == NULL)
+		return (NULL);
+	cmd->redir_count = 0;
+	cmd->redirs = get_cmd_redirs(token, cmd);
+	if (cmd->redirs == NULL && cmd->redir_count != 0)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	cmd->argc = get_cmd_argc(token, cmd);
+	cmd->argv = get_cmd_argv(token, cmd);
+	if (cmd->argv == NULL)
+	{
+		ft_lstclear_redir(&cmd->redirs);
+		free(cmd);
+		return (NULL);
+	}
+	return (cmd);
 }

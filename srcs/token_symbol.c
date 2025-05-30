@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/26 21:31:38 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/05/28 11:22:11 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ const t_sym_map	*get_single_sym(void)
 	{"(", TOKEN_LPAREN},
 	{")", TOKEN_RPAREN},
 	{";", TOKEN_SEQUENCE},
-	{"&", TOKEN_ANDPS},
+	{"&", TOKEN_ASYNC},
 	{NULL, 0}
 	};
 
