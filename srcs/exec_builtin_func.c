@@ -6,17 +6,15 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 14:38:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/28 18:00:05 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/28 17:22:24 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execute.h"
-#include <dirent.h>
 
 static int	exit_func(char **cmd)
 {
-	printf("exit\n");
 	if (cmd[1] != NULL)
 		exit(ft_atoi(cmd[1]));
 	exit(EXIT_SUCCESS);
@@ -24,24 +22,18 @@ static int	exit_func(char **cmd)
 
 static int	cd_func(char **cmd, char **envp)
 {
-	int		i;
-	char	*ptr;
+	int	i;
 
-	ptr = NULL;
 	i = -1;
 	if (cmd[1] != NULL)
-		ptr = cmd[1];
+		chdir(cmd[1]);
 	else
 	{
 		while(envp[++i])
 			if (!ft_strncmp("HOME=", envp[i], 5))
 				break ;
-		ptr = &envp[i][5];
+		chdir(envp[i] + 5);
 	}
-	if (opendir(ptr) == NULL)
-		perror("cd");
-	else
-		chdir(ptr);
 	return (0);
 }
 
