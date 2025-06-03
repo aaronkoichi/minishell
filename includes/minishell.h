@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/30 14:00:59 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/03 16:11:35 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,19 @@
 
 # include "../libft/includes/libft.h"
 
-# include <stdlib.h>
-# include <stdbool.h>
-# include <stdio.h>
-# include <string.h>
-# include <signal.h>
-# include <unistd.h>
-# include <term.h>
-# include <sys/ioctl.h>
+# include <dirent.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/ioctl.h>
+# include <sys/wait.h>
+# include <term.h>
+# include <unistd.h>
 
 typedef enum e_token_type
 {
@@ -115,7 +118,55 @@ typedef struct s_ast
 	t_cmd			*cmd;
 }	t_ast;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
+typedef struct s_vars
+{
+	t_token	*token_list;
+	t_ast	*ast_tree;
+	t_env	*env;
+	int		ori_stdin;
+	int		ori_stdout;
+	int		ori_stderr;
+	int		exit_code;
+	char	*home_dir;
+	char	*pwd_dir;
+	char	*oldpwd_dir;
+}	t_vars;
+
 extern volatile sig_atomic_t	g_signal;
+
+// builtin_echo.c
+int				builtin_echo(t_cmd *cmd, t_env **env);
+
+// builtin_env.c
+int				builtin_env(t_cmd *cmd, t_env **env);
+
+// builtin_exit.c
+int				builtin_exit(t_cmd *cmd, t_env **env);
+
+// builtin_export.c
+int				builtin_export(t_cmd *cmd, t_env **env);
+
+// builtin_pwd.c
+int				builtin_pwd(t_cmd *cmd, t_env **env);
+
+// builtin_unset.c
+int				builtin_unset(t_cmd *cmd, t_env **env);
+
+// envp.c
+char			*get_env_key(char **env_line);
+char			*get_env_value(char *env_line);
+t_env			*create_env_node(char *env_line);
+void			ft_lstadd_back_env(t_env **lst, t_env *new);
+void			ft_lstclear_env(t_env **env);
+t_env			*get_env_list(char **env);
+char			*get_env_list_value(t_env *env, char *key);
 
 // parse_cmd.c
 t_cmd			*init_cmd(t_token *token);
@@ -155,8 +206,9 @@ void			print_bad_ending(char *content);
 bool			is_parse_err(t_token *token);
 
 // signal.c
-void			handle_sigint(int sig);
-void			configure_signal(void);
+void			set_signal_noninteract(void);
+void			set_signal_interact(void);
+void			reset_signal(void);
 
 // token.c
 t_token			*tokenize_str(char *str);
@@ -175,6 +227,11 @@ bool			is_token_redirs(t_token *token);
 // token_word.c
 char			*token_word(char **str);
 
-void			start_usr_input(void);
+// vars.c
+void			destroy_vars(t_vars *vars);
+void			init_vars(t_vars *vars, char **envp);
+
+t_ast			*parse_input(t_token **token_list, char *input, t_vars *vars);
+void			start_usr_input(t_vars *vars);
 
 #endif

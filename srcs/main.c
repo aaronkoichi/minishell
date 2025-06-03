@@ -6,14 +6,16 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/30 15:27:02 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/03 16:11:24 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <signal.h>
+#include <unistd.h>
 
 // ------------------------- test print token ---------------------------------
 int	ft_lstsize_token(t_token *lst)
@@ -223,6 +225,18 @@ void test_print_ast_tree(t_ast *root) {
 // - does not handle arithmetic expansion
 // 	(treat as subshell in another subshell)
 //
+// - does not handle brace expansion
+//	(treat as valid word character)
+//
+// - does not handle tilde expansion
+//	(treat as valid word character)
+//
+// - does not handle command substitution
+//	(treat as valid word character followed by subshell)
+//
+// - does not handle word splitting
+//	(non-existent behaviour)
+//
 // - does not handle case conditional construct --> case `word' in
 //	(non-existent behaviour)
 //
@@ -231,10 +245,12 @@ void test_print_ast_tree(t_ast *root) {
 
 volatile sig_atomic_t	g_signal = 0;
 // TODO: $? exit code 130 for SIGINT --> ctrl + c
+// TODO: use reset_signal() function in child process before execution
+// TODO: reset fds in exec_main() before coming back to readline input gathering
+// TODO: store vars->exit_code after execution
 
-t_ast	*parse_input(t_token **token_list, char *input)
+t_ast	*parse_input(t_token **token_list, char *input, t_vars *vars)
 {
-	// t_token	*token_list;
 	t_ast	*ast_tree;
 
 	*token_list = tokenize_str(input);
@@ -243,6 +259,7 @@ t_ast	*parse_input(t_token **token_list, char *input)
 		free(input);
 		return (NULL);
 	}
+	vars->token_list = *token_list;
 	test_print_tokens(*token_list);
 	ast_tree = parse_token(*token_list);
 	if (ast_tree == NULL)
@@ -251,12 +268,13 @@ t_ast	*parse_input(t_token **token_list, char *input)
 		ft_lstclear_token(token_list);
 		return (NULL);
 	}
+	vars->ast_tree = ast_tree;
 	test_print_ast_tree(ast_tree);
 	return (ast_tree);
 }
 
 // void	start_usr_input(char *envp[])
-void	start_usr_input(void)
+void	start_usr_input(t_vars *vars)
 {
 	char	*input;
 	t_token	*token_list;
@@ -264,14 +282,16 @@ void	start_usr_input(void)
 
 	while (1)
 	{
+		set_signal_interact();
 		input = readline("minishell$ ");
 		if (input == NULL)
 			break ;
 		add_history(input);
-		ast_tree = parse_input(&token_list, input);
+		ast_tree = parse_input(&token_list, input, vars);
+		set_signal_noninteract();
 		if (ast_tree == NULL)
 			continue ;
-		// exec_main(ast_tree, envp);
+		// exec_main(ast_tree, envp, vars);
 		ft_lstclear_ast_tree(&ast_tree);
 		ft_lstclear_token(&token_list);
 		free(input);
@@ -281,10 +301,16 @@ void	start_usr_input(void)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	int					i;
+	int		i;
+	t_vars	vars;
 
-	configure_signal();
+	if (argc != 1)
+	{
+		ft_putstr_fd("Error: Usage: ./minishell\n", 2);
+		return (1);
+	}
 	rl_catch_signals = 0;
+	init_vars(&vars, envp);
 	i = 0;
 	while (envp[i])
 		i++;
@@ -292,7 +318,8 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argc;
 	(void)envp;
 	// envp = dup_envp(envp, i);
-	start_usr_input();
+	start_usr_input(&vars);
+	destroy_vars(&vars);
 	// start_usr_input(envp);
 	return (0);
 }

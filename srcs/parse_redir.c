@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:46:29 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/30 14:01:17 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/03 16:20:38 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ int	hdoc_handle_input(char *input, char *content)
 {
 	if (g_signal == 2)
 	{
-		free(input);
-		free(content);
+		// free(content);
 		g_signal = 0;
 		content = NULL;
 		return (1);
