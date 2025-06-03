@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 14:38:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/28 20:30:10 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/28 18:00:05 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,32 +45,6 @@ static int	cd_func(char **cmd, char **envp)
 	return (0);
 }
 
-static int export_func(char **cmd, char **envp)
-{
-	char	**temp;
-
-	temp = append_envp(envp, cmd[1]);
-	if (!temp)
-		return (1);
-	else
-		envp = temp;
-	// DEBUG
-	int i = -1;
-	while (envp[++i])
-		printf("%s\n", envp[i]);
-	return (0);
-}
-
-int env_func(char **envp)
-{
-	int	i;
-
-	i = -1;
-	while (envp[++i])
-		printf("%s\n", envp[i]);
-	return (0);
-}
-
 static int	builtin_functions_hlpr(char **cmd, const char *builtin)
 {
 	if (!ft_strncmp(builtin, cmd[0] + 1, ft_strlen(cmd[0] + 1))
@@ -85,10 +59,5 @@ int	builtin_functions(char **cmd, char **envp)
 		return (cd_func(cmd, envp));
 	else if (!builtin_functions_hlpr(cmd, "exit"))
 		return (exit_func(cmd));
-	else if (!builtin_functions_hlpr(cmd, "export"))
-		return (export_func(cmd, envp));
-	else if (!builtin_functions_hlpr(cmd, "env")
-		|| !builtin_functions_hlpr(cmd, "usr/bin/env"))
-		return (env_func(envp));
 	return (1);
 }
