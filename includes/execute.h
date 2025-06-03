@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/28 20:42:31 by zlee             ###   ########.fr       */
+/*   Updated: 2025/05/28 20:30:06 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ typedef struct s_exec
 	int	fork_pid[2];
 	int	pipe_fd[2];
 }	t_exec;
-
-typedef struct t_envp
-{
-	char	**envp;
-	int		size;
-}	t_envp;
-
 // exec_main.c
 int			exec_main(t_ast *node, char **envp);
 // exec_utils.c
