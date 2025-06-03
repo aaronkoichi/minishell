@@ -6,14 +6,32 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/27 20:49:44 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/03 19:20:34 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 #include "execute.h"
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <signal.h>
+#include <unistd.h>
 
 // ------------------------- test print token ---------------------------------
+int	ft_lstsize_token(t_token *lst)
+{
+	int	size;
+
+	size = 0;
+	while (lst != NULL)
+	{
+		size++;
+		lst = lst->next;
+	}
+	return (size);
+}
+
 void	test_print_tokens(t_token *token_list)
 {
 	int	i;
@@ -124,13 +142,16 @@ void print_command(t_cmd *cmd, const char *prefix, int is_last)
 	int	i;
 
 	i = 0;
-	printf("%s%sCommand: ", prefix, is_last ? "└──" : "├──");
-	while (i < cmd->argc)
+	if (cmd->argc != 0)
 	{
-		printf("%s ", cmd->argv[i]);
-		i++;
+		printf("%s%sCommand: ", prefix, is_last ? "└──" : "├──");
+		while (i < cmd->argc)
+		{
+			printf("%s ", cmd->argv[i]);
+			i++;
+		}
+		printf("\n");
 	}
-	printf("\n");
 	if (cmd->redirs != NULL)
 		print_redirs(cmd->redirs, prefix);
 }
@@ -151,6 +172,8 @@ void print_ast_node(t_ast *node, int level, const char *prefix, int is_last)
 				prefix, is_last ? "   " : "│  ");
 	if (node->type == NODE_COMMAND)
 		print_command(node->cmd, new_prefix, 1);
+	if (node->type == NODE_SUBSHELL && node->cmd->redirs != NULL)
+		print_redirs(node->cmd->redirs, prefix);
 	has_left = 0;
 	has_right = 0;
 	if (node->left != NULL)
@@ -175,55 +198,129 @@ void test_print_ast_tree(t_ast *root) {
 }
 // ---------------------------- test print tree --------------------
 
-// bool	is_valid_tokens(t_token *token)
-// {
-// 	if (is_valid_case(token) == false || is_valid_redir(token) == false)
-// 		// || is_valid_op(token) == false)
-// 	{
-// 		return (false);
-// 	}
-// 	return (true);
-// }
+// Limitations of minishell:
+// - does not handle unclosed quotes
+// 	(return NULL for token->content)
+//
+// - does not handle line continuation, a.k.a backslash character --> '\'
+// 	(treat as valid word character)
+//
+// - does not handle commenting --> '#'
+//	(treat as valid word character)
+//
+// - does not handle command ending with list delimiters --> '|', '&', ';', etc
+// 	(return NULL for ast_tree node, parsing error)
+//
+// - does not handle here_string redirection --> "<<<"
+// 	(return NULL for redir node, parsing error)
+//
+// - does not handle fd_in & fd_out redirection --> "<&", ">&"
+// 	(return NULL for redir node, parsing error)
+//
+// - does not handle async execution --> '&'
+// 	(return NULL for ast_tree node, parsing error)
+//
+// - does not handle unclosed parenthesis
+// 	(return NULL for ast_tree node, parsing error)
+//
+// - does not handle arithmetic expansion
+// 	(treat as subshell in another subshell)
+//
+// - does not handle brace expansion
+//	(treat as valid word character)
+//
+// - does not handle tilde expansion
+//	(treat as valid word character)
+//
+// - does not handle command substitution
+//	(treat as valid word character followed by subshell)
+//
+// - does not handle word splitting
+//	(non-existent behaviour)
+//
+// - does not handle case conditional construct --> case `word' in
+//	(non-existent behaviour)
+//
+// - does not handle loops --> `while', `for'
+//	(non-existent behaviour)
 
-int	main(int argc, char *argv[], char *envp[])
+volatile sig_atomic_t	g_signal = 0;
+// TODO: $? exit code 130 for SIGINT --> ctrl + c
+// TODO: use reset_signal() function in child process before execution
+// TODO: reset fds in exec_main() before coming back to readline input gathering
+// TODO: store vars->exit_code after execution
+
+t_ast	*parse_input(t_token **token_list, char *input, t_vars *vars)
+{
+	t_ast	*ast_tree;
+
+	*token_list = tokenize_str(input);
+	if (token_list == NULL)
+	{
+		free(input);
+		return (NULL);
+	}
+	vars->token_list = *token_list;
+	test_print_tokens(*token_list);
+	ast_tree = parse_token(*token_list);
+	if (ast_tree == NULL)
+	{
+		free(input);
+		ft_lstclear_token(token_list);
+		return (NULL);
+	}
+	vars->ast_tree = ast_tree;
+	test_print_ast_tree(ast_tree);
+	return (ast_tree);
+}
+
+// void	start_usr_input(char *envp[])
+void	start_usr_input(t_vars *vars)
 {
 	char	*input;
 	t_token	*token_list;
 	t_ast	*ast_tree;
 
-	(void)argv;
-	(void)argc;
 	while (1)
 	{
+		set_signal_interact();
 		input = readline("minishell$ ");
 		if (input == NULL)
-			return (1);
-		token_list = tokenize_str(input);
-		if (token_list == NULL)
-		{
-			free(input);
-			continue ;
-		}
-		test_print_tokens(token_list);
-		// if (is_valid_tokens(token_list) == false)
-		// {
-		// 	free(input);
-		// 	ft_lstclear_token(&token_list);
-		// 	continue ;
-		// }
-		ast_tree = parse_token(token_list);
+			break ;
+		add_history(input);
+		ast_tree = parse_input(&token_list, input, vars);
+		set_signal_noninteract();
 		if (ast_tree == NULL)
-		{
-			free(input);
-			ft_lstclear_token(&token_list);
 			continue ;
-		}
-		test_print_ast_tree(ast_tree);
-		exec_main(ast_tree, envp);
+		// exec_main(ast_tree, envp, vars);
 		ft_lstclear_ast_tree(&ast_tree);
 		ft_lstclear_token(&token_list);
 		free(input);
-		// start execute command
 	}
+	rl_clear_history();
+}
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	int		i;
+	t_vars	vars;
+
+	if (argc != 1)
+	{
+		ft_putstr_fd("Error: Usage: ./minishell\n", 2);
+		return (1);
+	}
+	rl_catch_signals = 0;
+	init_vars(&vars, envp);
+	i = 0;
+	while (envp[i])
+		i++;
+	(void)argv;
+	(void)argc;
+	(void)envp;
+	// envp = dup_envp(envp, i);
+	start_usr_input(&vars);
+	destroy_vars(&vars);
+	// start_usr_input(envp);
 	return (0);
 }
