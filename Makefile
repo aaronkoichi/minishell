@@ -27,7 +27,6 @@ SRCS_LIST = main.c				\
 			exec_pipe.c	\
 			exec_utils.c	\
 			prep_cmd.c		\
-			exec_builtin_func.c \
 
 OBJS_DIR = objs
 OBJS = $(SRCS_LIST:.c=.o)
