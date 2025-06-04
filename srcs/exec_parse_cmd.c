@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/04 16:41:15 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 17:46:42 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 	int	fork_pid;
 
 	status = 0;
+	(void)vars;
 	fork_pid = fork();
 	if (fork_pid == 0)
 	{
@@ -72,7 +73,7 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 		exit (EXIT_FAILURE);
 	}
 	waitpid(fork_pid, &status, 0);
-	if (status == 0 && redirs[1] != NULL)
+	if (status == 0 && redirs != NULL && redirs[1] != NULL)
 		touch_files(node, redirs);
 	free_arr(command);
 	free(redirs);

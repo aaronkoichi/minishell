@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:23:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/04 16:38:31 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 17:40:25 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static char	**prep_envp_cmd(char **cmd_arr, t_vars *vars)
 
 	i = -1;
 	temp = NULL;
-	*temp_env = vars->env;
+	temp_env = &vars->env;
 	while (*temp_env)
 	{
 		if (ft_strncmp((*temp_env)->key, "PATH", 4) == 0)

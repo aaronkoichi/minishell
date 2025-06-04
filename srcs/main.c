@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/03 19:20:34 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 17:42:10 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,7 +292,7 @@ void	start_usr_input(t_vars *vars)
 		set_signal_noninteract();
 		if (ast_tree == NULL)
 			continue ;
-		// exec_main(ast_tree, envp, vars);
+		exec_main(vars->ast_tree, vars);
 		ft_lstclear_ast_tree(&ast_tree);
 		ft_lstclear_token(&token_list);
 		free(input);

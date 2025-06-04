@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 20:47:07 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/14 20:52:00 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 17:39:43 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
-int	run_cmd(char **exec, char **envp)
+int	run_cmd(char **exec, t_vars *vars)
 {
 	int pid;
 	int	status;
 
+	(void)vars;
 	pid = fork();
 	status = 0;
 	if (pid == 0)
 	{
-		execve(exec[0], exec, envp);
+		execve(exec[0], exec, NULL);
 		perror("execve error\n");
 		exit(EXIT_FAILURE);
 	}
