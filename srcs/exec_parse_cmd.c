@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/27 22:48:35 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 16:41:15 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	redirect_fd(t_redir **redirs)
 	return (0);
 }
 
-int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
+int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 {
 	int	status;
 	int	fork_pid;
@@ -66,7 +66,8 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
 		status = redirect_fd(redirs);
 		if (status != 0)
 			exit (EXIT_FAILURE);
-		execve(command[0], command, envp);
+		reset_signal();
+		execve(command[0], command, NULL);
 		perror("execve");
 		exit (EXIT_FAILURE);
 	}
@@ -78,16 +79,16 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, char **envp)
 	return (WEXITSTATUS(status));
 }
 
-int	exec_cmd_main(t_ast *node, char **envp)
+int	exec_cmd_main(t_ast *node, t_vars *vars)
 {
 	char	**command;
 	t_redir	**redirs;
 
-	command = prep_cmd(node->cmd, envp);
+	command = prep_cmd(node->cmd, vars);
 	if (node->cmd->redir_count != 0)
 		redirs = determine_redir(node);
 	else
 		redirs = NULL;
-	return (exec_cmd(node, redirs, command, envp));
+	return (exec_cmd(node, redirs, command, vars));
 }
 
