@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/04 18:53:20 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 19:11:05 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	if (node->cmd->redir_count != 0)
 		redirs = determine_redir(node);
 	else
-		redirs = NULL;
+  	redirs = NULL;
 	status = exec_cmd(node, redirs, command, vars);
 	if (status == 127)
 		vars->exit_code = 127;
