@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/04 16:42:46 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 18:47:41 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,9 @@ int				builtin_pwd(t_cmd *cmd, t_env **env);
 
 // builtin_unset.c
 int				builtin_unset(t_cmd *cmd, t_env **env);
+
+// builtin.c
+int				builtin_functions(t_cmd *cmd, t_env *env);
 
 // envp.c
 char			*get_env_key(char **env_line);

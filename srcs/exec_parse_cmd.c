@@ -6,11 +6,12 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/04 17:46:42 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/04 18:53:20 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include "minishell.h"
 
 void	touch_files(t_ast *node, t_redir **redirs)
 {
@@ -58,38 +59,41 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 {
 	int	status;
 	int	fork_pid;
+	char	**envp;
 
 	status = 0;
-	(void)vars;
+	if (builtin_functions(node->cmd, vars->env) != -1)
+		return (0);
+	envp = construct_envp(vars);
 	fork_pid = fork();
 	if (fork_pid == 0)
-	{
-		status = redirect_fd(redirs);
-		if (status != 0)
-			exit (EXIT_FAILURE);
-		reset_signal();
-		execve(command[0], command, NULL);
-		perror("execve");
-		exit (EXIT_FAILURE);
-	}
+		exit (run_cmd(command, vars, redirs, envp));
 	waitpid(fork_pid, &status, 0);
 	if (status == 0 && redirs != NULL && redirs[1] != NULL)
 		touch_files(node, redirs);
 	free_arr(command);
+	free_arr(envp);
 	free(redirs);
-	return (WEXITSTATUS(status));
+	reset_fd(vars);
+	return (status);
 }
 
 int	exec_cmd_main(t_ast *node, t_vars *vars)
 {
 	char	**command;
 	t_redir	**redirs;
+	int		status;
 
 	command = prep_cmd(node->cmd, vars);
 	if (node->cmd->redir_count != 0)
 		redirs = determine_redir(node);
 	else
 		redirs = NULL;
-	return (exec_cmd(node, redirs, command, vars));
+	status = exec_cmd(node, redirs, command, vars);
+	if (status == 127)
+		vars->exit_code = 127;
+	else
+		vars->exit_code = WEXITSTATUS(status);
+	return (vars->exit_code);
 }
 

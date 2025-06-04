@@ -6,12 +6,13 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:35:28 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/02 12:45:58 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/04 18:54:09 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
+#include "execute.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
