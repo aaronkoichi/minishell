@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/03 16:11:35 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/10 19:05:43 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	int				ind;
 	struct s_env	*next;
 }	t_env;
 
@@ -139,54 +140,81 @@ typedef struct s_vars
 	char	*oldpwd_dir;
 }	t_vars;
 
-extern volatile sig_atomic_t	g_signal;
+typedef int	(*t_builtin_func)(t_cmd *cmd, t_env **env, t_vars *vars);
+
+typedef struct s_builtin_map
+{
+	const char		*cmd;
+	t_builtin_func	func;
+}	t_builtin_map;
+
+extern volatile
+sig_atomic_t g_signal;
+
+// builtin_cd.c
+int				builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars);
+
+// builtin_cd_utils.c
+t_env			*find_env_node_key(t_env *env, char *key);
+int				update_pwd_dirs(t_vars *vars);
+int				update_env_value(t_env *node, char *value);
 
 // builtin_echo.c
-int				builtin_echo(t_cmd *cmd, t_env **env);
+int				builtin_echo(t_cmd *cmd, t_env **env, t_vars *vars);
 
 // builtin_env.c
-int				builtin_env(t_cmd *cmd, t_env **env);
+int				builtin_env(t_cmd *cmd, t_env **env, t_vars *vars);
 
 // builtin_exit.c
-int				builtin_exit(t_cmd *cmd, t_env **env);
+int				builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars);
 
 // builtin_export.c
-int				builtin_export(t_cmd *cmd, t_env **env);
+int				builtin_export(t_cmd *cmd, t_env **env, t_vars *vars);
+
+// builtin_export_prt.c
+void			export_print_env(t_env **env);
 
 // builtin_pwd.c
-int				builtin_pwd(t_cmd *cmd, t_env **env);
+int				builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars);
 
 // builtin_unset.c
-int				builtin_unset(t_cmd *cmd, t_env **env);
+int				builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars);
+
+// builtin.c
+int				builtin_functions(t_cmd *cmd, t_vars *vars);
 
 // envp.c
-char			*get_env_key(char **env_line);
+char			*get_env_key(char *env_line, int *i);
 char			*get_env_value(char *env_line);
-t_env			*create_env_node(char *env_line);
+t_env			*create_env_node(char *env_line, int ind);
+t_env			*get_env_list(char **env);
+
+// env_list_utils.c
+int				ft_lstsize_env(t_env *env);
 void			ft_lstadd_back_env(t_env **lst, t_env *new);
 void			ft_lstclear_env(t_env **env);
-t_env			*get_env_list(char **env);
 char			*get_env_list_value(t_env *env, char *key);
 
 // parse_cmd.c
-t_cmd			*init_cmd(t_token *token);
+t_cmd			*init_cmd(t_token *token, t_vars *vars);
 
 // parse_rdp_1.c
-t_ast			*parse_pipe(t_token **token, int *is_error);
-t_ast			*parse_and(t_token **token, int *is_error);
-t_ast			*parse_or(t_token **token, int *is_error);
-t_ast			*parse_sequence(t_token **token, int *is_error);
-t_ast			*parse_token(t_token *token);
+t_ast			*parse_pipe(t_token **token, int *is_error, t_vars *vars);
+t_ast			*parse_and(t_token **token, int *is_error, t_vars *vars);
+t_ast			*parse_or(t_token **token, int *is_error, t_vars *vars);
+t_ast			*parse_sequence(t_token **token, int *is_error, t_vars *vars);
+t_ast			*parse_token(t_token *token, t_vars *vars);
 
 // parse_rdp_2.c
-t_cmd			*parse_cmd(t_token **token);
-t_ast			*parse_subshell(t_token **token, int *is_error);
-t_ast			*parse_cmd_or_subshell(t_token **token, int *is_error);
-t_ast			*parse_cterm(t_token **token, int *is_error);
-t_ast			*parse_async(t_token **token, int *is_error);
+t_cmd			*parse_cmd(t_token **token, t_vars *vars);
+t_ast			*parse_subshell(t_token **token, int *is_error, t_vars *vars);
+t_ast			*parse_cmd_or_subshell(t_token **token,
+					int *is_error, t_vars *vars);
+t_ast			*parse_cterm(t_token **token, int *is_error, t_vars *vars);
+t_ast			*parse_async(t_token **token, int *is_error, t_vars *vars);
 
 // parse_redir.c
-t_redir			*create_redir_node(t_token **token);
+t_redir			*create_redir_node(t_token **token, t_vars *vars);
 
 // parse_redir_type.c
 t_redir_type	get_redir_type(t_token *token);
@@ -201,9 +229,9 @@ char			*strip_quotes_eof(char *str);
 t_ast			*create_ast_node(t_node_type type, t_ast *left,
 					t_ast *right, t_cmd *cmd);
 void			ft_lstclear_ast_tree(t_ast **ast);
-void			print_unexpected_token(char *content);
+void			print_unexpected_token(char *content, t_vars *vars);
 void			print_bad_ending(char *content);
-bool			is_parse_err(t_token *token);
+bool			is_parse_err(t_token *token, t_vars *vars);
 
 // signal.c
 void			set_signal_noninteract(void);
@@ -231,6 +259,7 @@ char			*token_word(char **str);
 void			destroy_vars(t_vars *vars);
 void			init_vars(t_vars *vars, char **envp);
 
+// main.c
 t_ast			*parse_input(t_token **token_list, char *input, t_vars *vars);
 void			start_usr_input(t_vars *vars);
 

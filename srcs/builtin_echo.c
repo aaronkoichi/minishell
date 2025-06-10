@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:47:07 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/31 18:49:40 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/10 14:53:13 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ static void	echo_print(t_cmd *cmd, int i)
 	}
 }
 
-int	builtin_echo(t_cmd *cmd, t_env **env)
+int	builtin_echo(t_cmd *cmd, t_env **env, t_vars *vars)
 {
 	int	i;
 
+	(void)vars;
+	(void)env;
 	i = 1;
 	if (ft_strncmp(cmd->argv[i], "-n", 3) == 0)
 		echo_print(cmd, i + 1);

@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 15:27:21 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/02 15:38:44 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/04 14:00:59 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	sigint_interact(int sig)
 		ft_putstr_fd("\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
+		g_signal = 130;
 	}
 }
 

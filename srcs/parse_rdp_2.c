@@ -6,17 +6,17 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:48:16 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/30 14:50:12 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/04 13:43:21 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*parse_cmd(t_token **token)
+t_cmd	*parse_cmd(t_token **token, t_vars *vars)
 {
 	t_cmd	*cmd;
 
-	cmd = init_cmd(*token);
+	cmd = init_cmd(*token, vars);
 	if (cmd == NULL)
 		return (NULL);
 	while (token != NULL && (is_token_redirs(*token) == true
@@ -25,13 +25,13 @@ t_cmd	*parse_cmd(t_token **token)
 	return (cmd);
 }
 
-t_ast	*parse_subshell(t_token **token, int *is_error)
+t_ast	*parse_subshell(t_token **token, int *is_error, t_vars *vars)
 {
 	t_ast	*subshell;
 	t_cmd	*cmd;
 
 	*token = (*token)->next;
-	subshell = parse_sequence(token, is_error);
+	subshell = parse_sequence(token, is_error, vars);
 	if ((*token)->type != TOKEN_RPAREN)
 	{
 		ft_putstr_fd("Opps, minishell no likey unclosed parenthesis\n", 2);
@@ -40,17 +40,17 @@ t_ast	*parse_subshell(t_token **token, int *is_error)
 		return (NULL);
 	}
 	*token = (*token)->next;
-	cmd = parse_cmd(token);
+	cmd = parse_cmd(token, vars);
 	return (create_ast_node(NODE_SUBSHELL, subshell, NULL, cmd));
 }
 
-t_ast	*parse_cmd_or_subshell(t_token **token, int *is_error)
+t_ast	*parse_cmd_or_subshell(t_token **token, int *is_error, t_vars *vars)
 {
 	t_cmd	*cmd;
 
 	if ((*token)->type == TOKEN_LPAREN)
-		return (parse_subshell(token, is_error));
-	cmd = parse_cmd(token);
+		return (parse_subshell(token, is_error, vars));
+	cmd = parse_cmd(token, vars);
 	if (cmd == NULL)
 	{
 		*is_error = 1;
@@ -59,16 +59,16 @@ t_ast	*parse_cmd_or_subshell(t_token **token, int *is_error)
 	return (create_ast_node(NODE_COMMAND, NULL, NULL, cmd));
 }
 
-t_ast	*parse_cterm(t_token **token, int *is_error)
+t_ast	*parse_cterm(t_token **token, int *is_error, t_vars *vars)
 {
 	t_ast	*left;
 	t_ast	*right;
 	t_token	*temp;
 
-	left = parse_cmd_or_subshell(token, is_error);
+	left = parse_cmd_or_subshell(token, is_error, vars);
 	while (*token != NULL && is_token_cterm(*token) == true)
 	{
-		if (is_parse_err(*token) == true)
+		if (is_parse_err(*token, vars) == true)
 		{
 			ft_lstclear_ast_tree(&left);
 			*is_error = 1;
@@ -76,9 +76,9 @@ t_ast	*parse_cterm(t_token **token, int *is_error)
 		}
 		temp = *token;
 		*token = (*token)->next;
-		right = parse_cmd_or_subshell(token, is_error);
+		right = parse_cmd_or_subshell(token, is_error, vars);
 		if (right != NULL)
-			print_unexpected_token(temp->content);
+			print_unexpected_token(temp->content, vars);
 		*is_error = 1;
 		ft_lstclear_ast_tree(&left);
 		ft_lstclear_ast_tree(&right);
@@ -87,22 +87,22 @@ t_ast	*parse_cterm(t_token **token, int *is_error)
 	return (left);
 }
 
-t_ast	*parse_async(t_token **token, int *is_error)
+t_ast	*parse_async(t_token **token, int *is_error, t_vars *vars)
 {
 	t_ast	*left;
 	t_ast	*right;
 
-	left = parse_cterm(token, is_error);
+	left = parse_cterm(token, is_error, vars);
 	while (*token != NULL && (*token)->type == TOKEN_ASYNC)
 	{
-		if (is_parse_err(*token) == true)
+		if (is_parse_err(*token, vars) == true)
 		{
 			ft_lstclear_ast_tree(&left);
 			*is_error = 1;
 			return (NULL);
 		}
 		*token = (*token)->next;
-		right = parse_cterm(token, is_error);
+		right = parse_cterm(token, is_error, vars);
 		if (right != NULL)
 		{
 			ft_putstr_fd("Opps, minishell no likey asynchronous ", 2);
