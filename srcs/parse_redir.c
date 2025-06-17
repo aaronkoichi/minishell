@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:46:29 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/03 16:20:38 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/04 13:46:52 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ char	*append_line(char *content, char *input, int ind)
 	return (joined);
 }
 
-int	hdoc_handle_input(char *input, char *content)
+int	hdoc_handle_input(char *input, char **content, t_vars *vars)
 {
 	if (g_signal == 2)
 	{
-		// free(content);
 		g_signal = 0;
-		content = NULL;
+		free(*content);
+		*content = NULL;
+		vars->exit_code = 130;
 		return (1);
 	}
 	if (input == NULL)
@@ -54,7 +55,7 @@ int	hdoc_handle_input(char *input, char *content)
 	return (0);
 }
 
-char	*get_hdoc_input(char *eof)
+char	*get_hdoc_input(char *eof, t_vars *vars)
 {
 	char	*content;
 	char	*input;
@@ -68,7 +69,7 @@ char	*get_hdoc_input(char *eof)
 	{
 		g_signal = 1;
 		input = readline("heredoc> ");
-		if (hdoc_handle_input(input, content) == 1)
+		if (hdoc_handle_input(input, &content, vars) == 1)
 			break ;
 		g_signal = 0;
 		if (ft_strncmp(input, eof, ft_strlen(eof) + 1) == 0)
@@ -82,7 +83,7 @@ char	*get_hdoc_input(char *eof)
 	return (content);
 }
 
-char	*get_hdoc_content(char *eof)
+char	*get_hdoc_content(char *eof, t_vars *vars)
 {
 	char	*content;
 	char	*eof_strip;
@@ -90,18 +91,19 @@ char	*get_hdoc_content(char *eof)
 	eof_strip = strip_quotes_eof(eof);
 	if (eof_strip == NULL)
 		return (NULL);
-	content = get_hdoc_input(eof_strip);
+	content = get_hdoc_input(eof_strip, vars);
 	free(eof_strip);
 	if (content == NULL)
 		return (NULL);
 	return (content);
 }
 
-t_redir	*create_redir_node(t_token **token)
+t_redir	*create_redir_node(t_token **token, t_vars *vars)
 {
 	t_redir	*redir;
 
-	if (is_parse_err(*token) == true || is_supported_redir(*token) == false)
+	if (is_parse_err(*token, vars) == true
+		|| is_supported_redir(*token) == false)
 		return (NULL);
 	redir = ft_calloc(1, sizeof(t_redir));
 	if (redir == NULL)
@@ -110,7 +112,7 @@ t_redir	*create_redir_node(t_token **token)
 	if ((*token)->type == TOKEN_HEREDOC)
 	{
 		redir->heredoc_eof = (*token)->next->content;
-		redir->heredoc_content = get_hdoc_content(redir->heredoc_eof);
+		redir->heredoc_content = get_hdoc_content(redir->heredoc_eof, vars);
 		if (redir->heredoc_content == NULL)
 		{
 			free(redir);

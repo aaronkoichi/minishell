@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:45:16 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/29 14:26:01 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/04 13:45:18 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ char	**get_cmd_argv(t_token *token, t_cmd *cmd)
 	return (argv);
 }
 
-int	create_and_add_redir(t_token **token, t_redir **head)
+int	create_and_add_redir(t_token **token, t_redir **head, t_vars *vars)
 {
 	t_redir	*redir;
 
-	redir = create_redir_node(token);
+	redir = create_redir_node(token, vars);
 	if (redir == NULL)
 	{
 		ft_lstclear_redir(head);
@@ -64,7 +64,7 @@ int	create_and_add_redir(t_token **token, t_redir **head)
 	return (0);
 }
 
-t_redir	*get_cmd_redirs(t_token *token, t_cmd *cmd)
+t_redir	*get_cmd_redirs(t_token *token, t_cmd *cmd, t_vars *vars)
 {
 	t_redir	*head;
 
@@ -75,7 +75,7 @@ t_redir	*get_cmd_redirs(t_token *token, t_cmd *cmd)
 		if (is_token_redirs(token) == true)
 		{
 			cmd->redir_count++;
-			if (create_and_add_redir(&token, &head) == 1)
+			if (create_and_add_redir(&token, &head, vars) == 1)
 				return (NULL);
 		}
 		token = token->next;
@@ -83,7 +83,7 @@ t_redir	*get_cmd_redirs(t_token *token, t_cmd *cmd)
 	return (head);
 }
 
-t_cmd	*init_cmd(t_token *token)
+t_cmd	*init_cmd(t_token *token, t_vars *vars)
 {
 	t_cmd	*cmd;
 
@@ -91,7 +91,7 @@ t_cmd	*init_cmd(t_token *token)
 	if (cmd == NULL)
 		return (NULL);
 	cmd->redir_count = 0;
-	cmd->redirs = get_cmd_redirs(token, cmd);
+	cmd->redirs = get_cmd_redirs(token, cmd, vars);
 	if (cmd->redirs == NULL && cmd->redir_count != 0)
 	{
 		free(cmd);

@@ -6,13 +6,13 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 15:48:37 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/31 15:58:08 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/10 15:17:12 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_valid_identifier(char *str)
+bool	is_valid_identifier(char *str)
 {
 	if (str == NULL || !(ft_isalpha(*str) == 1 || *str == '_'))
 		return (false);
@@ -25,22 +25,44 @@ static bool	is_valid_identifier(char *str)
 	return (true);
 }
 
-static void	export_print_env(t_env **env)
+bool	is_exist_node_key(t_env *node, t_env *env)
+{
+	t_env	*temp;
+
+	temp = env;
+	while (temp != NULL)
+	{
+		if (strcmp(temp->key, node->key) == 0)
+			return (true);
+		temp = temp->next;
+	}
+	return (false);
+}
+
+void	update_env_value(t_env *node, t_env **env)
 {
 	t_env	*temp;
 
 	temp = *env;
 	while (temp != NULL)
 	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(temp->key, 1);
-		if (temp->value != NULL)
+		if (strcmp(temp->key, node->key) == 0)
 		{
-			ft_putstr_fd("=\"", 1);
-			ft_putstr_fd(temp->value, 1);
-			ft_putstr_fd("\"", 1);
+			if (node->value != NULL)
+			{
+				free(temp->value);
+				temp->value = node->value;
+				free(node->key);
+				node->value = NULL;
+				free(node);
+			}
+			else
+			{
+				free(node->key);
+				free(node);
+			}
+			break ;
 		}
-		ft_putstr_fd("\n", 1);
 		temp = temp->next;
 	}
 }
@@ -49,6 +71,7 @@ static int	export_add_entry(t_cmd *cmd, t_env **env)
 {
 	int		i;
 	t_env	*node;
+	t_env	*temp;
 
 	i = 1;
 	while (cmd->argv[i] != NULL)
@@ -60,21 +83,21 @@ static int	export_add_entry(t_cmd *cmd, t_env **env)
 			ft_putstr_fd("': not a valid identifier\n", 2);
 			return (1);
 		}
-		node = create_env_node(cmd->argv[i]);
+		node = create_env_node(cmd->argv[i], ft_lstsize_env(*env));
 		if (node == NULL)
-		{
-			perror("export node");
 			return (1);
-		}
-		ft_lstadd_back_env(env, node);
+		if (is_exist_node_key(node, *env) == true)
+			update_env_value(node, env);
+		else
+			ft_lstadd_back_env(env, node);
 		i++;
 	}
 	return (0);
 }
 
-int	builtin_export(t_cmd *cmd, t_env **env)
+int	builtin_export(t_cmd *cmd, t_env **env, t_vars *vars)
 {
-
+	(void)vars;
 	if (cmd->argc == 1)
 	{
 		export_print_env(env);

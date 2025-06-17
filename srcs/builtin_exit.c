@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/01 14:41:41 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/10 14:52:40 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,20 @@ static bool	is_valid_num(char *str)
 	return (true);
 }
 
-int	builtin_exit(t_cmd *cmd, t_env **env)
+int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars)
 {
 	unsigned int	code;
 
 	(void)env;
+	ft_putstr_fd("exit", 1);
 	if (is_valid_num(cmd->argv[1]) == false)
 	{
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(cmd->argv[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
+		ft_lstclear_ast_tree(&vars->ast_tree);
+		ft_lstclear_token(&vars->token_list);
+		destroy_vars(vars);
 		exit(2);
 	}
 	if (cmd->argc > 2 && is_valid_num(cmd->argv[1]) == true)
@@ -44,6 +48,8 @@ int	builtin_exit(t_cmd *cmd, t_env **env)
 		return (1);
 	}
 	code = ft_atoi(cmd->argv[1]);
-	// cleanup
-	exit(code);
+	ft_lstclear_ast_tree(&vars->ast_tree);
+	ft_lstclear_token(&vars->token_list);
+	destroy_vars(vars);
+	exit(code % 256);
 }

@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/31 16:16:33 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/10 14:33:09 by jthiew           ###   ########.fr       */
+/*   Created: 2025/06/10 14:11:21 by jthiew            #+#    #+#             */
+/*   Updated: 2025/06/10 14:11:41 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars)
+int	ft_strcmp(char *s1, char *s2)
 {
-	char	*cwd;
-
-	(void)cmd;
-	(void)env;
-	(void)vars;
-	cwd = getcwd(NULL, 0);
-	if (cwd == NULL)
+	while (*s1 != '\0' || *s2 != '\0')
 	{
-		perror("getcwd error");
-		return (1);
+		if (*s1 != *s2)
+			return (*s1 - *s2);
+		s1++;
+		s2++;
 	}
-	ft_putstr_fd(cwd, 1);
-	return (0);
+	return (*s1 - *s2);
 }

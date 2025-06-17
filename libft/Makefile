@@ -20,7 +20,7 @@ SRCS_LIST = ft_atoi.c 		ft_bzero.c 		ft_calloc.c 		ft_isalnum.c \
 			ft_flags_utils_1.c	ft_flags_utils_2.c	ft_print_c.c	ft_print_d_1.c \
 			ft_print_d.c		ft_printf.c			ft_print_p.c	ft_print_s.c \
 			ft_print_u_1.c		ft_print_u.c		ft_print_x_1.c	ft_print_x.c \
-			ft_isspace.c
+			ft_isspace.c	ft_strcmp.c
 
 # ft_lstadd_back.c	ft_lstadd_front.c \
 # ft_lstclear.c	ft_lstdelone.c 	ft_lstiter.c		ft_lstlast.c \

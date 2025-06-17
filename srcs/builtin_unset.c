@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 17:05:06 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/31 17:05:15 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/10 14:32:19 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ static void	unset_del_env_node(char *str, t_env **env)
 	}
 }
 
-int	builtin_unset(t_cmd *cmd, t_env **env)
+int	builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars)
 {
 	t_env	*prev;
 	t_env	*curr;
 	t_env	*temp;
 	int		i;
 
+	(void)vars;
 	i = 1;
 	while (cmd->argv[i] != NULL)
 	{

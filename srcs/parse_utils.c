@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 12:51:29 by jthiew            #+#    #+#             */
-/*   Updated: 2025/05/30 11:26:52 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/04 13:36:57 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,12 @@ void	ft_lstclear_ast_tree(t_ast **ast)
 		ft_lstclear_ast_tree(&right);
 }
 
-void	print_unexpected_token(char *content)
+void	print_unexpected_token(char *content, t_vars *vars)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 	ft_putstr_fd(content, 2);
 	ft_putstr_fd("'\n", 2);
+	vars->exit_code = 2;
 }
 
 void	print_bad_ending(char *content)
@@ -63,7 +64,7 @@ void	print_bad_ending(char *content)
 	ft_putstr_fd("\n", 2);
 }
 
-bool	is_parse_err(t_token *token)
+bool	is_parse_err(t_token *token, t_vars *vars)
 {
 	if (is_token_cterm(token->next)
 		|| is_token_ops(token->next)
@@ -71,7 +72,7 @@ bool	is_parse_err(t_token *token)
 		|| (is_token_redirs(token) && is_token_redirs(token->next))
 		|| (is_token_redirs(token) && token->next->type == TOKEN_EOF))
 	{
-		print_unexpected_token(token->next->content);
+		print_unexpected_token(token->next->content, vars);
 		return (true);
 	}
 	if (!(token->type == TOKEN_SEQUENCE || token->type == TOKEN_ASYNC)
