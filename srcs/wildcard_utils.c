@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:34:53 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/08 21:08:42 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 20:08:48 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wildcard.h"
+#include "execute.h"
 
 void	free_array(char **arr)
 {
@@ -41,3 +41,40 @@ int	count_trim_lines(char **arr, const char *filename)
 	return (c);
 }
 
+void	ft_lstaddback_file(t_file **file, char *string)
+{
+	t_file	*head;
+
+	head = *file;
+	if (*file == NULL)
+	{
+		*file = malloc(sizeof(t_file));
+		(*file)->file = ft_strdup(string);
+		(*file)->next = NULL;
+	}
+	else
+	{
+		while (*file)
+			file = &(*file)->next;
+		*file = malloc(sizeof(t_file));
+		(*file)->file = ft_strdup(string);
+		(*file)->next = NULL;
+		*file = head;
+	}
+}
+
+void	ft_lstclear_file(t_file **file, void (*del)(void *))
+{
+	t_file	*temp;
+
+	temp = NULL;
+	if (!file || !del)
+		return ;
+	while (*file)
+	{
+		del((*file)->file);
+		temp = (*file)->next;
+		free(*file);
+		*file = temp;
+	}
+}
