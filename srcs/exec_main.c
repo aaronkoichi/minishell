@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/04 19:07:59 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 15:18:16 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	function_tree_subshell(t_ast *node, t_vars *vars)
 		return (exec_main(node->left, vars));
 	else
 		waitpid(info.fork_pid[0], &info.status, 0);
+	reset_fd(vars);
 	return (WEXITSTATUS(info.status));
 }
 
