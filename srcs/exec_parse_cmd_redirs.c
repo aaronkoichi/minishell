@@ -6,11 +6,12 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/05/27 20:37:17 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 15:56:36 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include "minishell.h"
 
 int	redir_out(t_redir *redir)
 {
@@ -56,6 +57,21 @@ int	redir_in(t_redir *redir)
 	close(fd[0]);
 	return (0);
 }
+
+int	subshell_redir(t_ast *node)
+{
+	int		status;
+	t_redir	**redirs;
+
+	redirs = determine_redir(node);
+	status = redirect_fd(redirs);
+	if (status == -1)
+		return (EXIT_FAILURE);
+	else
+		return (EXIT_SUCCESS);
+}
+
+
 
 // t_redir [0] --> In | Heredoc, [1] --> Out | Append
 t_redir		**determine_redir(t_ast *node)

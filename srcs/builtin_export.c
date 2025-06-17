@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 15:48:37 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/10 15:17:12 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/06/17 16:35:09 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	is_exist_node_key(t_env *node, t_env *env)
 	return (false);
 }
 
-void	update_env_value(t_env *node, t_env **env)
+static void	update_env_value_exp(t_env *node, t_env **env)
 {
 	t_env	*temp;
 
@@ -71,7 +71,6 @@ static int	export_add_entry(t_cmd *cmd, t_env **env)
 {
 	int		i;
 	t_env	*node;
-	t_env	*temp;
 
 	i = 1;
 	while (cmd->argv[i] != NULL)
@@ -87,7 +86,7 @@ static int	export_add_entry(t_cmd *cmd, t_env **env)
 		if (node == NULL)
 			return (1);
 		if (is_exist_node_key(node, *env) == true)
-			update_env_value(node, env);
+			update_env_value_exp(node, env);
 		else
 			ft_lstadd_back_env(env, node);
 		i++;

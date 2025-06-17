@@ -6,11 +6,12 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/17 15:25:13 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 15:31:12 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 // ------------------------- test print token ---------------------------------
 // int	ft_lstsize_token(t_token *lst)
 // {
@@ -325,9 +326,9 @@ void	start_usr_input(t_vars *vars)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	int		i;
 	t_vars	vars;
 
+	(void)argv;
 	if (argc != 1)
 	{
 		ft_putstr_fd("Error: Usage: ./minishell\n", 2);

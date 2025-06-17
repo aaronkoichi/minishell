@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/04 18:55:02 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 16:23:49 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,5 @@ int			redirect_fd(t_redir **redirs);
 int			redir_out(t_redir *redir);
 int			redir_in(t_redir *redir);
 t_redir		**determine_redir(t_ast *node);
-// builtin.c
-int				builtin_functions(t_cmd *cmd, t_env *env);
+int			subshell_redir(t_ast *node);
 #endif

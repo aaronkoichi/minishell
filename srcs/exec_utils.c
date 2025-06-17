@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 20:47:07 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/04 18:52:21 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 16:04:43 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp)
 	if (status != 0)
 		return (EXIT_FAILURE);
 	reset_signal();
-	execve(exec[0], exec, NULL);
+	execve(exec[0], exec, envp);
 	perror("execve");
 	return (127);
 }

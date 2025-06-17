@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/17 15:22:52 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 16:32:11 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 # include "../libft/includes/libft.h"
 # include <dirent.h>
 # include <fcntl.h>
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/ioctl.h>
@@ -181,10 +181,6 @@ int				builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars);
 
 // builtin.c
 int				builtin_functions(t_cmd *cmd, t_vars *vars);
-
-// builtin.c
-int				builtin_functions(t_cmd *cmd, t_env *env);
-
 // envp.c
 char			*get_env_key(char *env_line, int *i);
 char			*get_env_value(char *env_line);
