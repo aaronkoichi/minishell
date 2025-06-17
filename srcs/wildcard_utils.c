@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:34:53 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/17 20:08:48 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 23:59:00 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_lstaddback_file(t_file **file, char *string)
 		*file = malloc(sizeof(t_file));
 		(*file)->file = ft_strdup(string);
 		(*file)->next = NULL;
-		*file = head;
+		file = &head;
 	}
 }
 
@@ -78,3 +78,18 @@ void	ft_lstclear_file(t_file **file, void (*del)(void *))
 		*file = temp;
 	}
 }
+
+int	ft_lstsize_file(t_file *file)
+{
+	int	c;
+
+	c = 0;
+	while (file)
+	{
+		c++;
+		file = file->next;
+	}
+	return (c);
+}
+
+

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:03:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/17 20:04:18 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/17 23:47:14 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	fn_match_helper(const char *pattern, const char *filename)
 	return (0);
 }
 
-static void	alloc_with_asterisks(char **string_join, const char *pattern, int characters, char **arr)
+static void	alloc_with_asterisks(char **string_join, const char *pattern, char **arr)
 {
 	t_pos	pos;
 	int		i;
@@ -74,17 +74,13 @@ char	*trim_pattern(const char *pattern)
 	char	**removed_asterisks;
 	char	*string_join;
 	int		characters;
-	t_pos	pos;
-	int		i;
 
-	pos.y = -1;
-	i = 0;
 	removed_asterisks = ft_split(pattern, '*');
 	characters = count_trim_lines(removed_asterisks, pattern);
 	string_join = malloc((characters + 1) * sizeof(char));
 	if (!string_join)
 		return (NULL);
-	alloc_with_asterisks(&string_join, pattern, characters, removed_asterisks);
+	alloc_with_asterisks(&string_join, pattern, removed_asterisks);
 	free_array(removed_asterisks);
 	if (!string_join)
 		return (0);

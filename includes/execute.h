@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/17 19:56:00 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/18 00:04:44 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,14 @@ int			redir_out(t_redir *redir);
 int			redir_in(t_redir *redir);
 t_redir		**determine_redir(t_ast *node);
 int			subshell_redir(t_ast *node);
-
+// wildcard.c
+int 		detect_wildcard(t_cmd *cmd);
+// wildcard_fnmatch.c
+int			ft_fnmatch(const char *pattern, const char *filename);
 /*wildcard_utils.c*/
-void	free_array(char **arr);
-int		count_trim_lines(char **arr, const char *filename);
-void	ft_lstaddback_file(t_file **file, char *string);
-int		ft_fnmatch(const char *pattern, const char *filename);
+void		free_array(char **arr);
+int			count_trim_lines(char **arr, const char *filename);
+void		ft_lstaddback_file(t_file **file, char *string);
+int			ft_lstsize_file(t_file *file);
+void		ft_lstclear_file(t_file **file, void (*del)(void *));
 #endif

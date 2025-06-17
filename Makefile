@@ -42,6 +42,9 @@ SRCS_LIST = main.c					\
 			builtin_export_prt.c	\
 			builtin_pwd.c			\
 			builtin_unset.c			\
+			wildcard.c 				\
+			wildcard_fnmatch.c		\
+			wildcard_utils.c		\
 
 OBJS_DIR = objs
 OBJS = $(SRCS_LIST:.c=.o)
