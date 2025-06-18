@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/18 15:27:05 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/18 17:45:43 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,12 @@ int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars)
 	(void)env;
 	ft_putstr_fd("exit\n", 1);
 	if (cmd->argc == 1)
+	{
+		ft_lstclear_ast_tree(&vars->ast_tree);
+		ft_lstclear_token(&vars->token_list);
+		destroy_vars(vars);
 		exit(0);
+	}
 	if (is_valid_num(cmd->argv[1]) == false)
 	{
 		ft_putstr_fd("exit: ", 2);

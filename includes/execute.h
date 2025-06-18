@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/18 00:04:44 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/18 17:35:03 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,7 @@ typedef struct s_file
 {
 	char			*file;
 	struct s_file	*next;
-
 }					t_file;
-
 
 // exec_main.c
 int			exec_main(t_ast *node, t_vars *vars);
@@ -74,4 +72,6 @@ int			count_trim_lines(char **arr, const char *filename);
 void		ft_lstaddback_file(t_file **file, char *string);
 int			ft_lstsize_file(t_file *file);
 void		ft_lstclear_file(t_file **file, void (*del)(void *));
+// wildcard_mk_new_exev.c
+t_file		*mk_new_execve(t_file **files, char *str);
 #endif

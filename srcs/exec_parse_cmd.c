@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/18 00:44:44 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/18 16:12:31 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	t_redir	**redirs;
 	int		status;
 	
+	detect_wildcard(node->cmd);
 	if (builtin_functions(node->cmd, vars) != -1)
 		return (0);
 	command = prep_cmd(node->cmd, vars);
