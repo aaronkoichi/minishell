@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/23 23:07:14 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 00:31:28 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void		ft_lstclear_file(t_file **file, void (*del)(void *));
 t_file		*mk_new_execve(t_file **files, char *str);
 
 // Handle env.
-
-
+t_cmd	*detect_env(t_env *vars, t_cmd **cmd);
 
 #endif
