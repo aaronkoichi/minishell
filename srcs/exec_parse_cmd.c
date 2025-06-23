@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/18 18:58:11 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/23 23:21:01 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 		else
 			vars->exit_code = WEXITSTATUS(status);
 	}
-	free(node->cmd->argv);
+	free_arr(temp);
 	node->cmd->argv = original;
 	return (vars->exit_code);
 }

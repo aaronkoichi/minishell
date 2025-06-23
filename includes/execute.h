@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/18 18:37:08 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/23 23:07:14 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int			redir_out(t_redir *redir);
 int			redir_in(t_redir *redir);
 t_redir		**determine_redir(t_ast *node);
 int			subshell_redir(t_ast *node);
+
+// for handling the wildcards
 // wildcard.c
 char		**detect_wildcard(t_cmd *cmd);
 // wildcard_fnmatch.c
@@ -74,4 +76,9 @@ int			ft_lstsize_file(t_file *file);
 void		ft_lstclear_file(t_file **file, void (*del)(void *));
 // wildcard_mk_new_exev.c
 t_file		*mk_new_execve(t_file **files, char *str);
+
+// Handle env.
+
+
+
 #endif
