@@ -6,11 +6,12 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:33:56 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/18 17:34:22 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 20:59:33 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <stddef.h>
 
 static char	**create_arr_from_t_file(t_file *file)
 {
@@ -54,25 +55,37 @@ static char	**sort_readdir_helper(t_file *unsorted)
 	return (sorted);
 }
 
+static void	readdir_three_times(DIR *directory, struct dirent **file)
+{
+	*file = readdir(directory);
+	*file = readdir(directory);
+	*file = readdir(directory);
+}
+
 static char **create_fnmatch(char *str)
 {
 	DIR				*directory;
 	struct dirent	*file;
 	t_file			*tmp;
 	char			**sorted;
+	size_t			count;
 	
+	count = 0;
 	directory = opendir(".");
-	file = readdir(directory);
-	file = readdir(directory);
-	file = readdir(directory);
 	tmp = NULL;
+	readdir_three_times(directory, &file);
 	while (file)
 	{
 		if (ft_fnmatch(str, file->d_name))
+		{
 			ft_lstaddback_file(&tmp, file->d_name);
+			count++;
+		}
 		file = readdir(directory);
 	}
 	closedir(directory);
+	if (count == 0)
+		ft_lstaddback_file(&tmp, str);
 	sorted = sort_readdir_helper(tmp);
 	ft_lstclear_file(&tmp, free);
 	return (sorted);
