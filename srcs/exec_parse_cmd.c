@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/24 12:29:28 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 15:09:49 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,15 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	char	**command;
 	t_redir	**redirs;
 	int		status;
-	char	**temp;
-	char	**original;
+	// char	**temp;
+	// char	**original;
 	
-	original = node->cmd->argv;
-	// node = detect_env(vars->env, &node);
-	temp = detect_wildcard(node->cmd);
-	if (temp != NULL)
-		node->cmd->argv = temp;
+	detect_env(vars->env, node);
+	// original = node->cmd->argv;
+	printf("exec_cmd_main argv[1]=%s\n", node->cmd->argv[1]);
+	// temp = detect_wildcard(node->cmd);
+	// if (temp != NULL)
+	// 	node->cmd->argv = temp;
 	if (builtin_functions(node->cmd, vars) != -1)
 		;
 	else
@@ -105,9 +106,9 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 		else
 			vars->exit_code = WEXITSTATUS(status);
 	}
-	if (temp)
-		free_arr(temp);
-	node->cmd->argv = original;
+	// if (temp)
+	// 	free_arr(temp);
+	// node->cmd->argv = original;
 	return (vars->exit_code);
 }
 

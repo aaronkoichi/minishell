@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 12:30:49 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 14:26:34 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars)
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		return (1);
 	}
-	if (cmd->argc == 0)
+	if (cmd->argc == 1)
 		code = 0;
 	else if (is_valid_num(cmd->argv[1]) == false)
 	{
