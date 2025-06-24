@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/23 23:21:01 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 12:29:28 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	char	**original;
 	
 	original = node->cmd->argv;
+	// node = detect_env(vars->env, &node);
 	temp = detect_wildcard(node->cmd);
 	if (temp != NULL)
 		node->cmd->argv = temp;
@@ -104,7 +105,8 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 		else
 			vars->exit_code = WEXITSTATUS(status);
 	}
-	free_arr(temp);
+	if (temp)
+		free_arr(temp);
 	node->cmd->argv = original;
 	return (vars->exit_code);
 }
