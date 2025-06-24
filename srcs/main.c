@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/17 15:31:12 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 20:41:56 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,7 +272,7 @@ t_ast	*parse_input(t_token **token_list, char *input, t_vars *vars)
 	t_ast	*ast_tree;
 
 	*token_list = tokenize_str(input);
-	if (token_list == NULL)
+	if (*token_list == NULL)
 	{
 		free(input);
 		return (NULL);
