@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/24 20:31:21 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 21:57:43 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,29 +60,33 @@ static void	set_key_value(char **str, char *key, char *value)
 	free(temp);
 }
 
-static void	key_value_init(t_env *vars, char **str)
+static void	key_value_init(t_vars *vars, char **str)
 {
 	char	*key;
 	char	*value;
+	t_env	*env;
 
+	env = vars->env;
 	key = ft_strcdup(ft_strchr(*str, '$') + 1, '$');
 	if (!key)
 		key = ft_strdup(ft_strchr(*str, '$') + 1);
 	value = NULL;
-	while (vars)
+	while (env)
 	{
-		if (!ft_strcmp(key, vars->key))
+		if (!ft_strcmp(key, "?"))
+			value = ft_itoa(vars->exit_code);
+		if (!ft_strcmp(key, env->key))
 		{
-			value = vars->value;
+			value = vars->env->value;
 			break ;
 		}
-		vars = vars->next;
+		env = env->next;
 	}
 	set_key_value(str, key, value);
 	free(key);
 }
 
-void	detect_env(t_env *vars, char **arr)
+void	detect_env(t_vars *vars, char **arr)
 {
 	int		i;
 	

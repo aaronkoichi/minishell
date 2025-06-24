@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/17 16:01:05 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 21:58:24 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	function_tree_subshell(t_ast *node, t_vars *vars)
 
 	memset(&info, 0, sizeof(t_exec));
 	if (node->cmd->redir_count != 0)
-		if (subshell_redir(node) != -1)
+		if (subshell_redir(node) == EXIT_FAILURE)
 		{
 			reset_fd(vars);
 			return (EXIT_FAILURE);
@@ -35,7 +35,10 @@ int	function_tree_subshell(t_ast *node, t_vars *vars)
 	if (info.fork_pid[0] < 0)
 		perror("subshell\n");
 	if (info.fork_pid[0] == 0)
-		return (exec_main(node->left, vars));
+	{
+		exec_main(node->left, vars);
+		exit(1);
+	}
 	else
 		waitpid(info.fork_pid[0], &info.status, 0);
 	reset_fd(vars);

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 20:47:07 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/18 16:16:07 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 21:53:12 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,8 @@ void	free_arr(char **arr)
 
 int	run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp)
 {
-	int	status;
-
+	(void)redirs;
 	envp = construct_envp(vars);
-	status = redirect_fd(redirs);
-	if (status != 0)
-		return (EXIT_FAILURE);
 	reset_signal();
 	execve(exec[0], exec, envp);
 	perror("execve");
@@ -43,9 +39,9 @@ int	run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp)
 
 void	reset_fd(t_vars *vars)
 {
-	dup2(0, vars->ori_stdin);
-	dup2(1, vars->ori_stdout);
-	dup2(2, vars->ori_stderr);
+	dup2(vars->ori_stdin, 0);
+	dup2(vars->ori_stdout, 1);
+	dup2(vars->ori_stderr, 2);
 }
 
 int	env_size(t_env *env)

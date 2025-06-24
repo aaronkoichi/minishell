@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/24 20:30:20 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/24 21:48:59 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,22 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 
 	status = 0;
 	envp = NULL;
-	fork_pid = fork();
-	if (fork_pid == 0)
-		exit (run_cmd(command, vars, redirs, envp));
-	waitpid(fork_pid, &status, 0);
+	if (node->cmd->redir_count != 0)
+		redirs = determine_redir(node);
+	else
+		redirs = NULL;
+	status = redirect_fd(redirs);
+	if (status != 0)
+		return (EXIT_FAILURE);
+	if (builtin_functions(node->cmd, vars) != -1)
+		reset_fd(vars);
+	else
+	{
+		fork_pid = fork();
+		if (fork_pid == 0)
+			exit (run_cmd(command, vars, redirs, envp));
+		waitpid(fork_pid, &status, 0);
+	}
 	if (status == 0 && redirs != NULL && redirs[1] != NULL)
 		touch_files(node, redirs);
 	free_arr(command);
@@ -85,26 +97,18 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	char	**temp;
 	char	**original;
 	
+	redirs = NULL;
 	original = node->cmd->argv;
 	temp = detect_wildcard(node->cmd);
 	if (temp != NULL)
 		node->cmd->argv = temp;
-	detect_env(vars->env, node->cmd->argv);
-	if (builtin_functions(node->cmd, vars) != -1)
-		;
+	detect_env(vars, node->cmd->argv);
+	command = prep_cmd(node->cmd, vars);
+	status = exec_cmd(node, redirs, command, vars);
+	if (status == 127)
+		vars->exit_code = 127;
 	else
-	{
-		command = prep_cmd(node->cmd, vars);
-		if (node->cmd->redir_count != 0)
-			redirs = determine_redir(node);
-		else
-			redirs = NULL;
-		status = exec_cmd(node, redirs, command, vars);
-		if (status == 127)
-			vars->exit_code = 127;
-		else
-			vars->exit_code = WEXITSTATUS(status);
-	}
+		vars->exit_code = WEXITSTATUS(status);
 	if (temp)
 		free_arr(temp);
 	node->cmd->argv = original;
