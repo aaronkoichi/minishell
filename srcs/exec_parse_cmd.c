@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/24 21:48:59 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:32 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	char	**temp;
 	char	**original;
 	
+	if (!ft_strcmp(node->cmd->argv[0], "exit"))
+		builtin_functions(node->cmd, vars);
 	redirs = NULL;
 	original = node->cmd->argv;
 	temp = detect_wildcard(node->cmd);

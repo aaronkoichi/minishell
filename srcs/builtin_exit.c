@@ -6,11 +6,12 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 14:26:34 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 17:11:41 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execute.h"
 
 static bool	is_valid_num(char *str)
 {
@@ -24,6 +25,18 @@ static bool	is_valid_num(char *str)
 		str++;
 	}
 	return (true);
+}
+static void close_fd(t_vars *vars)
+{
+	close(0);
+	close(1);
+	close(2);
+	dup2(vars->ori_stdin, 0);
+	dup2(vars->ori_stdout, 1);
+	dup2(vars->ori_stderr, 2);
+	close(0);
+	close(1);
+	close(2);
 }
 
 int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars)
@@ -48,6 +61,7 @@ int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars)
 	}
 	else
 		code = ft_atoi(cmd->argv[1]);
+	close_fd(vars);
 	ft_lstclear_ast_tree(&vars->ast_tree);
 	ft_lstclear_token(&vars->token_list);
 	destroy_vars(vars);

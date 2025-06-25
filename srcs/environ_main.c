@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/24 21:57:43 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 16:48:45 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,8 @@ static void	key_value_init(t_vars *vars, char **str)
 	{
 		if (!ft_strcmp(key, "?"))
 			value = ft_itoa(vars->exit_code);
-		if (!ft_strcmp(key, env->key))
-		{
-			value = vars->env->value;
-			break ;
-		}
+		else if (!ft_strcmp(key, env->key))
+			value = env->value;
 		env = env->next;
 	}
 	set_key_value(str, key, value);
