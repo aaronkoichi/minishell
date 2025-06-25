@@ -3,127 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/09 10:18:49 by jthiew            #+#    #+#             */
-/*   Updated: 2024/11/13 18:50:20 by jthiew           ###   ########.fr       */
+/*   Created: 2024/11/04 17:38:12 by zlee              #+#    #+#             */
+/*   Updated: 2024/11/08 18:23:56 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stddef.h>
+#include "libft.h"
 
-static size_t	ft_strlen(const char *s)
+static int	count_digit(int n)
 {
-	size_t	i;
+	int	count;
 
-	i = 0;
-	while (s[i] != '\0')
+	count = 1;
+	if (n < 0)
 	{
-		i++;
+		n = -n;
+		count++;
 	}
-	return (i);
+	while (n > 9)
+	{
+		n = n / 10;
+		count++;
+	}
+	return (count);
 }
 
-static char	*ft_strdup(const char *s)
+static void	assign_var(int size, char *str, int neg, int n)
 {
-	size_t	len;
-	char	*new_str;
-	size_t	i;
-
-	len = ft_strlen(s);
-	new_str = malloc(sizeof(char) * (len + 1));
-	if (new_str == NULL)
+	while (size >= neg)
 	{
-		return (NULL);
+		str[size--] = (n % 10) + 48;
+		n = n / 10;
 	}
-	i = 0;
-	while (s[i] != '\0')
-	{
-		new_str[i] = s[i];
-		i++;
-	}
-	new_str[i] = '\0';
-	return (new_str);
-}
-
-static char	*ft_strrev(char *s, int ind)
-{
-	int		start;
-	int		end;
-	char	temp;
-
-	start = 0;
-	end = ind - 1;
-	while (start < end)
-	{
-		temp = s[start];
-		s[start] = s[end];
-		s[end] = temp;
-		start++;
-		end--;
-	}
-	return (s);
-}
-
-static char	*ft_count_digit(int	*n, int	*sign)
-{
-	int		digits;
-	int		num;
-	char	*str;
-
-	digits = 0;
-	if (*n < 0)
-	{
-		*sign = 1;
-		*n = -*n;
-	}
-	num = *n;
-	while (num > 0)
-	{
-		num = num / 10;
-		digits++;
-	}
-	str = malloc(sizeof(char) * (digits + *sign + 1));
-	if (str == NULL)
-	{
-		return (NULL);
-	}
-	return (str);
 }
 
 char	*ft_itoa(int n)
 {
-	int		sign;
-	int		ind;
-	char	*str;
+	int		size;
+	char	*string;
+	int		neg;
 
-	sign = 0;
-	ind = 0;
+	neg = 0;
+	size = count_digit(n);
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
-	if (n == 0)
-		return (ft_strdup("0"));
-	str = ft_count_digit(&n, &sign);
-	if (str == NULL)
-		return (NULL);
-	while (n > 0)
+	if (n < 0)
 	{
-		str[ind++] = (n % 10) + '0';
-		n = n / 10;
+		neg = 1;
+		n = -n;
 	}
-	if (sign == 1)
-		str[ind++] = '-';
-	str[ind] = '\0';
-	return (ft_strrev(str, ind));
+	string = (char *)malloc((size + 1) * sizeof(char));
+	if (!string)
+		return (0);
+	string[size--] = '\0';
+	if (neg == 1)
+		string[0] = '-';
+	assign_var(size, string, neg, n);
+	return (string);
 }
-
-/*
-#include <stdio.h>
-int	main(int argc, char *argv[])
-{
-	int	i = argc;
-	i = atoi(argv[1]);
-	printf("Int = %d, str = %s\n", i, ft_itoa(i));
-}
-*/
+//
+//#include <stdio.h>
+//int	main(void)
+//{
+	//int test = -23;
+	//char *test2 = ft_itoa(-234);
+	//char *test3 = ft_itoa(342);
+	//char *test4 = ft_itoa(800980);
+	//char *ts = ft_itoa(test);
+	//printf("%s\n", ts);
+	//printf("%s\n", test2);
+	//printf("%s\n", test3);
+	//printf("%s\n", test4);
+	//free(ts);
+	//free(test2);
+	//free(test3);
+	//free(test4);
+//}
