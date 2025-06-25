@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/25 18:45:42 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 21:06:03 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*ft_strcdup(char *str, char letter)
 	char	*string;
 	size_t	len;
 	size_t	i;
-	
+
 	i = 0;
 	if (ft_strchr(str, letter) == NULL)
 		return (NULL);
@@ -37,7 +37,7 @@ static void	set_key_value(char **str, char *key, char *value)
 	char	*before_key;
 	char	*temp;
 	size_t	num;
-	
+
 	before_key = ft_strcdup(*str, '$');
 	if (!before_key)
 		return ;
@@ -91,13 +91,21 @@ static void	key_value_init(t_vars *vars, char **str)
 void	detect_env(t_vars *vars, char **arr)
 {
 	int		i;
-	
+	char	*head;
+
 	i = 0;
+	head = arr[i];
 	while (arr[i])
 	{
-		if (ft_strchr(arr[i], '$') != NULL)
+		if (ft_strchr(head, 39) != NULL)
+		{
+			head = move_char(head);
+			continue ;
+		}
+		else if (ft_strchr(head, '$') != NULL)
 			key_value_init(vars, &arr[i]);
 		else
 			i++;
+		head = arr[i];
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/24 21:21:43 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 20:37:37 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,7 @@ t_file		*mk_new_execve(t_file **files, char *str);
 
 // Handle env.
 void		detect_env(t_vars *vars, char **arr);
+
+// exec_trim.c
+char *move_char(char *arr);
 #endif
