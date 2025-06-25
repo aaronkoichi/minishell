@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 20:47:07 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/25 17:09:00 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 18:15:02 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp)
 	envp = construct_envp(vars);
 	reset_signal();
 	execve(exec[0], exec, envp);
+	free_arr(envp);
 	perror("execve");
 	return (127);
 }

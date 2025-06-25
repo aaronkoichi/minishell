@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/25 17:21:32 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 18:17:56 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	touch_files(t_ast *node, t_redir **redirs)
 		if (ft_strncmp(head->filename, redirs[1]->filename,
 			ft_strlen(redirs[1]->filename)) != 0 && (head->type == REDIR_OUT
 			|| head->type == REDIR_APPEND))
-				fd = open(head->filename, O_CREAT, 0644);
+		{
+			fd = open(head->filename, O_CREAT, 0644);
+			close(fd);
+		}
 		else
 			(void)fd;
 		head = head->next;
@@ -55,6 +58,13 @@ int	redirect_fd(t_redir **redirs)
 	return (0);
 }
 
+void	close_fd(void)
+{
+	close(0);
+	close(1);
+	close(2);
+}
+
 int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 {
 	int	status;
@@ -76,7 +86,14 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 	{
 		fork_pid = fork();
 		if (fork_pid == 0)
-			exit (run_cmd(command, vars, redirs, envp));
+		{
+			run_cmd(command, vars, redirs, envp);
+			free_arr(command);
+			free(redirs);
+			reset_fd(vars);
+			close_fd();
+			return (-2);
+		}
 		waitpid(fork_pid, &status, 0);
 	}
 	if (status == 0 && redirs != NULL && redirs[1] != NULL)
@@ -98,7 +115,7 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	char	**original;
 	
 	if (!ft_strcmp(node->cmd->argv[0], "exit"))
-		builtin_functions(node->cmd, vars);
+		exit (builtin_functions(node->cmd, vars));
 	redirs = NULL;
 	original = node->cmd->argv;
 	temp = detect_wildcard(node->cmd);
@@ -109,6 +126,8 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	status = exec_cmd(node, redirs, command, vars);
 	if (status == 127)
 		vars->exit_code = 127;
+	else if (status == -2)
+		vars->exit_code = -2;
 	else
 		vars->exit_code = WEXITSTATUS(status);
 	if (temp)

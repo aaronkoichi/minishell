@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 20:41:56 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/25 18:10:26 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,6 +319,11 @@ void	start_usr_input(t_vars *vars)
 		exec_main(vars->ast_tree, vars);
 		ft_lstclear_ast_tree(&ast_tree);
 		ft_lstclear_token(&token_list);
+		if (vars->exit_code == -2)
+		{
+			destroy_vars(vars);
+			exit(127);
+		}
 		free(input);
 	}
 	rl_clear_history();
