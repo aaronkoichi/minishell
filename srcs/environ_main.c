@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/25 21:06:03 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/26 17:54:52 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ static char	*ft_strcdup(char *str, char letter)
 	size_t	i;
 
 	i = 0;
-	if (ft_strchr(str, letter) == NULL)
-		return (NULL);
-	len = ft_strchr(str, letter) - str;
+	if (letter == '\0')
+		len = ft_strlen(str);
+	else
+		len = ft_strchr(str, letter) - str;
 	string = malloc((len + 1) * sizeof(char));
 	while (i < len)
 	{
@@ -65,11 +66,11 @@ static void	key_value_init(t_vars *vars, char **str)
 	char	*key;
 	char	*value;
 	t_env	*env;
+	char	*char_location;
 
 	env = vars->env;
-	key = ft_strcdup(ft_strchr(*str, '$') + 1, '$');
-	if (!key)
-		key = ft_strdup(ft_strchr(*str, '$') + 1);
+	char_location = ft_strchr(*str, '$') + 1;
+	key = ft_strcdup(ft_strchr(*str, '$') + 1, find_sym_env(char_location));
 	value = NULL;
 	while (env)
 	{
@@ -88,24 +89,27 @@ static void	key_value_init(t_vars *vars, char **str)
 	free(key);
 }
 
-void	detect_env(t_vars *vars, char **arr)
+char	**detect_env(t_vars *vars, char **arr)
 {
 	int		i;
 	char	*head;
+	char	**duped;
 
 	i = 0;
-	head = arr[i];
-	while (arr[i])
+	duped = ft_strdup_arr(arr);
+	head = duped[i];
+	while (duped[i])
 	{
-		if (ft_strchr(head, 39) != NULL)
+		if (ft_strchr(head, '\'') != NULL)
 		{
 			head = move_char(head);
 			continue ;
 		}
 		else if (ft_strchr(head, '$') != NULL)
-			key_value_init(vars, &arr[i]);
+			key_value_init(vars, &duped[i]);
 		else
 			i++;
-		head = arr[i];
+		head = duped[i];
 	}
+	return (duped);
 }

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/25 18:17:56 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/26 17:54:22 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 	return (status);
 }
 
+// TODO: have to write a new function for detecting exit, such as skipping quotes.
 int	exec_cmd_main(t_ast *node, t_vars *vars)
 {
 	char	**command;
@@ -118,10 +119,10 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 		exit (builtin_functions(node->cmd, vars));
 	redirs = NULL;
 	original = node->cmd->argv;
-	temp = detect_wildcard(node->cmd);
-	if (temp != NULL)
-		node->cmd->argv = temp;
-	detect_env(vars, node->cmd->argv);
+	temp = detect_env(vars, node->cmd->argv);
+	node->cmd->argv = temp;
+	// node->cmd->argv = detect_wildcard(node->cmd);
+	node->cmd->argv = trim_execve(node->cmd->argv);
 	command = prep_cmd(node->cmd, vars);
 	status = exec_cmd(node, redirs, command, vars);
 	if (status == 127)

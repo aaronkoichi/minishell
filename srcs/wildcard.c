@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:59:27 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/23 23:19:59 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/26 16:41:02 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 // Plan --> go through every files using opendir, then use the 
 // 			ft_fnmatch function to see if the file matches the output.
-char	**combine_new_execve(t_file *files, char **cmd)
+static char	**combine_new_execve(t_file *files, char **cmd)
 {
 	int		i;
 	int		size;
@@ -37,20 +37,35 @@ char	**detect_wildcard(t_cmd *cmd)
 	t_file	*new_string;
 	int		i;
 	char	**new_arr;
+	char	*temp;
 
 	new_string = NULL;
 	new_arr = NULL;
 	i = -1;
-	while (cmd->argv[++i])
+	temp = cmd->argv[++i];
+	while (temp)
 	{
-		if (i == 0 && !ft_strcmp("exit", cmd->argv[i]))
+		if (ft_strchr(temp, 39) || ft_strchr(temp, 34))
+		{
+			temp = move_char_wild(temp);
+			continue ;
+		}
+		if (i == 0 && !ft_strcmp("exit", temp))
 			return (NULL);
-		if (ft_strchr(cmd->argv[i], '*') != NULL)
-			mk_new_execve(&new_string, cmd->argv[i]);
+		if (ft_strchr(temp, '*') != NULL)
+		{
+			temp = cmd->argv[i];
+			mk_new_execve(&new_string, temp);
+		}
 		else
-			ft_lstaddback_file(&new_string, cmd->argv[i]);
+		{	
+			temp = cmd->argv[i];
+			ft_lstaddback_file(&new_string, temp);
+		}
+		temp = cmd->argv[++i];
 	}
 	cmd->argc = ft_lstsize_file(new_string);
+	free_arr(cmd->argv);
 	new_arr = combine_new_execve(new_string, new_arr);
 	ft_lstclear_file(&new_string, free);
 	return (new_arr);

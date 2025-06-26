@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/25 20:37:37 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/26 16:19:35 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,14 @@ void		ft_lstclear_file(t_file **file, void (*del)(void *));
 // wildcard_mk_new_exev.c
 t_file		*mk_new_execve(t_file **files, char *str);
 
-// Handle env.
-void		detect_env(t_vars *vars, char **arr);
-
-// exec_trim.c
-char *move_char(char *arr);
+// environ_main.c
+char		**detect_env(t_vars *vars, char **arr);
+// environ_utils.c
+char		**ft_strdup_arr(char **arr);
+char		find_sym_env(char *string);
+// exec_environ_trim.c
+char		*move_char(char *arr);
+char		*move_char_wild(char *arr);
+// execve_trim.c
+char		**trim_execve(char **arr);
 #endif

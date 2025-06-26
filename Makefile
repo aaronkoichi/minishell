@@ -47,6 +47,9 @@ SRCS_LIST = main.c					\
 			wildcard_utils.c		\
 			wildcard_mk_new_exev.c	\
 			environ_main.c			\
+			exec_environ_trim.c		\
+			environ_utils.c			\
+			execve_trim.c			\
 
 OBJS_DIR = objs
 OBJS = $(SRCS_LIST:.c=.o)
