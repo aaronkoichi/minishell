@@ -6,11 +6,12 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 17:54:52 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/26 22:00:59 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
+#include <term.h>
 
 static char	*ft_strcdup(char *str, char letter)
 {
@@ -89,6 +90,11 @@ static void	key_value_init(t_vars *vars, char **str)
 	free(key);
 }
 
+/* TODO: Fix how to implement:
+*		- Make a function to traverse the sentance charac by charac.
+*		- if encounter \' just move to the next \'
+*		- but if encounter \" see inside got $, if got $, process it until the next \".
+*/
 char	**detect_env(t_vars *vars, char **arr)
 {
 	int		i;
@@ -100,6 +106,9 @@ char	**detect_env(t_vars *vars, char **arr)
 	head = duped[i];
 	while (duped[i])
 	{
+		if (ft_strchr(head, '\"') != NULL)
+			if (ft_strchr(head, '$') != NULL)
+				key_value_init(vars, &duped[i]);
 		if (ft_strchr(head, '\'') != NULL)
 		{
 			head = move_char(head);

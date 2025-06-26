@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 17:54:22 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/26 21:23:20 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,9 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 	return (status);
 }
 
-// TODO: have to write a new function for detecting exit, such as skipping quotes.
+/* TODO: - have to write a new function for detecting exit, such as skipping quotes.
+*        - Fix wildcards.
+*/ 
 int	exec_cmd_main(t_ast *node, t_vars *vars)
 {
 	char	**command;

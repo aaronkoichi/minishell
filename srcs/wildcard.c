@@ -6,12 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:59:27 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 16:41:02 by zlee             ###   ########.fr       */
+/*   Updated: 2025/06/26 20:33:24 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-#include <dirent.h>
 
 // Plan --> go through every files using opendir, then use the 
 // 			ft_fnmatch function to see if the file matches the output.
@@ -50,8 +49,6 @@ char	**detect_wildcard(t_cmd *cmd)
 			temp = move_char_wild(temp);
 			continue ;
 		}
-		if (i == 0 && !ft_strcmp("exit", temp))
-			return (NULL);
 		if (ft_strchr(temp, '*') != NULL)
 		{
 			temp = cmd->argv[i];
@@ -61,8 +58,8 @@ char	**detect_wildcard(t_cmd *cmd)
 		{	
 			temp = cmd->argv[i];
 			ft_lstaddback_file(&new_string, temp);
+			temp = cmd->argv[++i];
 		}
-		temp = cmd->argv[++i];
 	}
 	cmd->argc = ft_lstsize_file(new_string);
 	free_arr(cmd->argv);
