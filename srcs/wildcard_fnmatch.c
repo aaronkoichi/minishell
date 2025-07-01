@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:03:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/17 23:47:14 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 19:36:46 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,84 +17,83 @@
  * 			--> If matches, return 1
  * 			--> If not, return 0
 */ 			
-static int	fn_match_helper(const char *pattern, const char *filename)
+static int	fn_match_helper(const char *pattern, const char *filename,
+						   const char *metadata)
 {
 	char	*temp_addr;
+	char	*meta_addr;
 
 	temp_addr = NULL;
+	meta_addr = NULL;
 	if (*pattern == '\0' && *filename == '\0')
 		return (1);
 	if (*pattern == '\0')
 		return (0);
-	if (*pattern == '*')
+	if (*pattern == '*' && *metadata == 'U')
 	{
 		temp_addr = (char *)pattern + 1;
+		meta_addr = (char *)metadata + 1;
 		if (*(temp_addr) == '\0')
 			return (1);
-		if (fn_match_helper(temp_addr, filename))
+		if (fn_match_helper(temp_addr, filename, meta_addr))
 			return (1);
 		temp_addr = (char *)filename + 1;
-		if (*filename != '\0' && fn_match_helper(pattern, temp_addr))
+		if (*filename != '\0' && fn_match_helper(pattern, temp_addr, metadata))
 			return (1);
 		return (0);
 	}
 	if (*pattern == *filename)
-		return (fn_match_helper(++pattern, ++filename));
+		return (fn_match_helper(++pattern, ++filename, ++metadata));
 	return (0);
 }
 
-static void	alloc_with_asterisks(char **string_join, const char *pattern, char **arr)
-{
-	t_pos	pos;
-	int		i;
-
-	i = 0;
-	pos.y = -1;
-	if (pattern[0] == '*')
-		(*string_join)[i++] = '*';
-	while(arr[++pos.y])
-	{
-		pos.x = -1;
-		while (arr[pos.y][++pos.x])
-			(*string_join)[i++] = arr[pos.y][pos.x];
-		(*string_join)[i++] = '*';
-	}
-	if (pattern[ft_strlen(pattern) - 1] == '*')
-		(*string_join)[i] = '\0';
-	else
-		(*string_join)[--i] = '\0';
-}
-
+// static void	alloc_with_asterisks(char **string_join, const char *pattern, char **arr)
+// {
+// 	t_pos	pos;
+// 	int		i;
+//
+// 	i = 0;
+// 	pos.y = -1;
+// 	if (pattern[0] == '*')
+// 		(*string_join)[i++] = '*';
+// 	while(arr[++pos.y])
+// 	{
+// 		pos.x = -1;
+// 		while (arr[pos.y][++pos.x])
+// 			(*string_join)[i++] = arr[pos.y][pos.x];
+// 		(*string_join)[i++] = '*';
+// 	}
+// 	if (pattern[ft_strlen(pattern) - 1] == '*')
+// 		(*string_join)[i] = '\0';
+// 	else
+// 		(*string_join)[--i] = '\0';
+// }
+//
 /*
  * Make multiple asterisks into one
  * For example: He***or**ld => He*or*ld
  * */
-char	*trim_pattern(const char *pattern)
-{
-	char	**removed_asterisks;
-	char	*string_join;
-	int		characters;
-
-	removed_asterisks = ft_split(pattern, '*');
-	characters = count_trim_lines(removed_asterisks, pattern);
-	string_join = malloc((characters + 1) * sizeof(char));
-	if (!string_join)
-		return (NULL);
-	alloc_with_asterisks(&string_join, pattern, removed_asterisks);
-	free_array(removed_asterisks);
-	if (!string_join)
-		return (0);
-	return (string_join);
-}
-
-int	ft_fnmatch(const char *pattern, const char *filename)
+// char	*trim_pattern(const char *pattern)
+// {
+// 	char	**removed_asterisks;
+// 	char	*string_join;
+// 	int		characters;
+//
+// 	removed_asterisks = ft_split(pattern, '*');
+// 	characters = count_trim_lines(removed_asterisks, pattern);
+// 	string_join = malloc((characters + 1) * sizeof(char));
+// 	if (!string_join)
+// 		return (NULL);
+// 	alloc_with_asterisks(&string_join, pattern, removed_asterisks);
+// 	free_array(removed_asterisks);
+// 	if (!string_join)
+// 		return (0);
+// 	return (string_join);
+// }
+int	ft_fnmatch(const char *pattern, const char *filename, const char *metadata)
 {
 	int		checker;
-	char	*trimmed_pattern;
-
-	trimmed_pattern = trim_pattern(pattern);
-	checker = fn_match_helper(trimmed_pattern, filename);
-	free(trimmed_pattern);
+	checker = fn_match_helper(pattern, filename, metadata);
 	return (checker);
 }
 //

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 16:52:34 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 21:40:35 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,15 +106,13 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 	return (status);
 }
 
-/* TODO: - have to write a new function for detecting exit, such as skipping quotes.
-*        - Fix wildcards.
-*/ 
 int	exec_cmd_main(t_ast *node, t_vars *vars)
 {
 	char	**command;
 	t_redir	**redirs;
 	int		status;
 	char	**temp;
+	char	**wildcard_temp;
 	char	**original;
 	char	**data;
 	
@@ -125,7 +123,9 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	temp = detect_env(vars, node->cmd->argv);
 	node->cmd->argv = temp;
 	data = trim_execve(node->cmd);
-	// node->cmd->argv = detect_wildcard(node->cmd);
+	wildcard_temp = detect_wildcard(node->cmd, data);
+	free_arr(temp);
+	node->cmd->argv = wildcard_temp;
 	command = prep_cmd(node->cmd, vars);
 	status = exec_cmd(node, redirs, command, vars);
 	if (status == 127)
@@ -134,8 +134,9 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 		vars->exit_code = -2;
 	else
 		vars->exit_code = WEXITSTATUS(status);
-	if (temp)
-		free_arr(temp);
+	// if (temp)
+	// 	free_arr(temp);
+	free_arr(wildcard_temp);
 	node->cmd->argv = original;
 	free_arr(data);
 	return (vars->exit_code);

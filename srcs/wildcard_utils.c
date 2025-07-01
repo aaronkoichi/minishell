@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:34:53 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/18 17:35:17 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 21:42:48 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void	free_array(char **arr)
 {
 	int	i;
 
-	i = 0;
-	while(arr[i])
+	i = -1;
+	while(arr[++i])
 	{
-		free(arr[i++]);
+		free(arr[i]);
 	}
 	free(arr[i]);
 	free(arr);
