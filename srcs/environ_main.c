@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 22:47:19 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 23:09:30 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ static void	key_value_init(t_vars *vars, char **str, char *addr)
 	t_env	*env;
 
 	env = vars->env;
-	key = ft_strcdup(addr + 1, find_sym_env(addr + 1));
+	if (*addr == '$' && *(addr + 1) == '?')
+		key = ft_strdup("?");
+	else
+		key = ft_strcdup(addr + 1, find_sym_env(addr + 1));
 	value = NULL;
 	while (env)
 	{

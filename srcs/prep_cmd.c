@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:23:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 17:53:40 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:29:49 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	**find_full_cmd(char **path, char **cmd_arr)
 	int		i;
 
 	i = -1;
-	while(path[++i])
+	while (path[++i])
 	{
 		new_path = ft_strjoin(path[i], cmd_arr[0]);
 		if (access(new_path, F_OK | X_OK) == 0)
@@ -80,13 +80,13 @@ static char	**init_cmd_exec(int ac, char **av)
 
 char	**prep_cmd(t_cmd *cmd, t_vars *vars)
 {
-	char **cmd_arr;
+	char	**cmd_arr;
 
 	cmd_arr = init_cmd_exec(cmd->argc, cmd->argv);
 	if (!cmd)
 		return (NULL);
 	if (access(cmd_arr[0], X_OK | F_OK) == 0)
-		return(cmd_arr);
+		return (cmd_arr);
 	else
 		cmd_arr = prep_envp_cmd(cmd_arr, vars);
 	return (cmd_arr);

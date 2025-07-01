@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 15:48:42 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 16:51:22 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:29:02 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,32 @@ static size_t	count_without_quotes(char *arr)
 	while (arr[++i])
 	{
 		if (hold_char != -1)
+		{
 			if (arr[i] == hold_char)
 				hold_char = -1;
 			else
 				count++;
+		}
 		else
+		{
 			if (arr[i] == 34 || arr[i] == 39)
 				hold_char = arr[i];
 			else
 				count++;
+		}
 	}
 	return (count);
 }
 
-static void	increment_quoted(char **string, char original, char **data, int *j)
+static void	increment_quoted(char **string, char original,
+				char **data, int *j)
 {
 	(*data)[++(*j)] = 'Q';
 	(*string)[*j] = original;
 }
 
-static void	increment_unquoted(char **string, char original, char **data, int *j)
+static void	increment_unquoted(char **string, char original,
+				char **data, int *j)
 {
 	(*data)[++(*j)] = 'U';
 	(*string)[*j] = original;
@@ -52,28 +58,31 @@ static void	increment_unquoted(char **string, char original, char **data, int *j
 static void	alloc_words_without_quotes(char **string, char *original,
 			char **data)
 {
-	int	i;
-	int	j;
-	int	hold_char;
+	t_pos	num;
+	int		hold_char;
 
-	i = -1;
-	j = -1;
+	num.x = -1;
+	num.y = -1;
 	hold_char = -1;
-	while (original[++i])
+	while (original[++num.x])
 	{
 		if (hold_char != -1)
-			if (original[i] == hold_char)
+		{
+			if (original[num.x] == hold_char)
 				hold_char = -1;
 			else
-				increment_quoted(string, original[i], data, &j);
+				increment_quoted(string, original[num.x], data, &(num.y));
+		}
 		else
-			if (original[i] == 34 || original[i] == 39)
-				hold_char = original[i];
+		{
+			if (original[num.x] == 34 || original[num.x] == 39)
+				hold_char = original[num.x];
 			else
-				increment_unquoted(string, original[i], data, &j);
+				increment_unquoted(string, original[num.x], data, &(num.y));
+		}
 	}
-	(*string)[++j] = '\0';
-	(*data)[j] = '\0';
+	(*string)[++num.y] = '\0';
+	(*data)[num.y] = '\0';
 }
 
 char	**trim_execve(t_cmd *cmd)

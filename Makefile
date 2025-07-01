@@ -26,6 +26,7 @@ SRCS_LIST = main.c					\
 			token_utils.c			\
 			token_word.c			\
 			exec_main.c				\
+			exec_main_subshell.c	\
 			exec_parse_cmd.c 		\
 			exec_parse_cmd_utils.c 	\
 			exec_parse_cmd_redirs.c \

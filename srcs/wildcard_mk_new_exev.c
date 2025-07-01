@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:33:56 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 19:33:12 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:31:50 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ static void	readdir_three_times(DIR *directory, struct dirent **file)
 	*file = readdir(directory);
 }
 
-static char **create_fnmatch(char *str, char *metadata)
+static char	**create_fnmatch(char *str, char *metadata)
 {
 	DIR				*directory;
 	struct dirent	*file;
 	t_file			*tmp;
 	char			**sorted;
 	size_t			count;
-	
+
 	count = 0;
 	directory = opendir(".");
 	tmp = NULL;

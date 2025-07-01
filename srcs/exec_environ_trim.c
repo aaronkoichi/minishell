@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 20:09:08 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 20:08:26 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 23:34:07 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ char	*move_char_wild(char *arr)
 	}
 }
 
-char *move_char(char *arr)
+char	*move_char(char *arr)
 {
-	char *charac;
+	char	*charac;
 
 	charac = ft_strchr(arr, '\'');
 	if (charac)

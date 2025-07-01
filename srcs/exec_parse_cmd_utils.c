@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 22:48:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 22:53:17 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 23:47:07 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	touch_files(t_ast *node, t_redir **redirs)
 	while (head != NULL)
 	{
 		if (ft_strncmp(head->filename, redirs[1]->filename,
-			ft_strlen(redirs[1]->filename)) != 0 && (head->type == REDIR_OUT
-			|| head->type == REDIR_APPEND))
+				ft_strlen(redirs[1]->filename)) != 0
+			&& (head->type == REDIR_OUT || head->type == REDIR_APPEND))
 		{
 			fd = open(head->filename, O_CREAT, 0644);
 			close(fd);

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:03:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 19:36:46 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:31:22 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
  * Description: See if the pattern and the filename matches the wildcard.
  * 			--> If matches, return 1
  * 			--> If not, return 0
-*/ 			
+*/
 static int	fn_match_helper(const char *pattern, const char *filename,
-						   const char *metadata)
+					const char *metadata)
 {
 	char	*temp_addr;
 	char	*meta_addr;
@@ -47,7 +47,8 @@ static int	fn_match_helper(const char *pattern, const char *filename,
 	return (0);
 }
 
-// static void	alloc_with_asterisks(char **string_join, const char *pattern, char **arr)
+// static void	alloc_with_asterisks(char **string_join,
+// 					const char *pattern, char **arr)
 // {
 // 	t_pos	pos;
 // 	int		i;
@@ -93,6 +94,7 @@ static int	fn_match_helper(const char *pattern, const char *filename,
 int	ft_fnmatch(const char *pattern, const char *filename, const char *metadata)
 {
 	int		checker;
+
 	checker = fn_match_helper(pattern, filename, metadata);
 	return (checker);
 }

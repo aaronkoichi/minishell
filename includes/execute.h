@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 22:53:23 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 23:36:40 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_file
 
 // exec_main.c
 int			exec_main(t_ast *node, t_vars *vars);
+// exec_main_subshell.c
+int			function_tree_subshell(t_ast *node, t_vars *vars);
 // exec_utils.c
 void		free_arr(char **arr);
 int			run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp);

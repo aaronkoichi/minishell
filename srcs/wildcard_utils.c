@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:34:53 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 21:42:48 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:33:23 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_array(char **arr)
 	int	i;
 
 	i = -1;
-	while(arr[++i])
+	while (arr[++i])
 	{
 		free(arr[i]);
 	}
@@ -34,7 +34,7 @@ int	count_trim_lines(char **arr, const char *filename)
 	i = 0;
 	if (filename[0] == '*')
 		c++;
-	while(arr[i])
+	while (arr[i])
 		c += ft_strlen(arr[i++]) + 1;
 	if (filename[ft_strlen(filename) - 1] != '*')
 		c--;
@@ -91,5 +91,3 @@ int	ft_lstsize_file(t_file *file)
 	}
 	return (c);
 }
-
-

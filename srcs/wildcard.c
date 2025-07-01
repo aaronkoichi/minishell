@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:59:27 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 21:44:41 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:30:19 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	**combine_new_execve(t_file *files, char **cmd)
 	cmd = malloc((size + 1) * sizeof(char *));
 	while (++i < size)
 	{
-		cmd[i] = ft_strdup(files->file); 
+		cmd[i] = ft_strdup(files->file);
 		files = files->next;
 	}
 	cmd[i] = NULL;
@@ -48,7 +48,6 @@ char	**detect_wildcard(t_cmd *cmd, char **metadata)
 			ft_lstaddback_file(&new_string, cmd->argv[i]);
 	}
 	cmd->argc = ft_lstsize_file(new_string);
-	// free_arr(cmd->argv);
 	new_arr = combine_new_execve(new_string, new_arr);
 	ft_lstclear_file(&new_string, free);
 	return (new_arr);

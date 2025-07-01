@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 19:58:24 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 23:42:51 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	redir_out(t_redir *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = 0;
 	if (redir->type == REDIR_OUT)
@@ -36,7 +36,7 @@ int	redir_in(t_redir *redir)
 {
 	int	fd[2];
 
-	memset(fd, 0, sizeof(int[2]));
+	memset(fd, 0, sizeof(int [2]));
 	if (redir->type == REDIR_HEREDOC)
 	{
 		if (pipe(fd) < 0)
@@ -71,14 +71,12 @@ int	subshell_redir(t_ast *node)
 		return (EXIT_SUCCESS);
 }
 
-
-
 // t_redir [0] --> In | Heredoc, [1] --> Out | Append
-t_redir		**determine_redir(t_ast *node)
+t_redir	**determine_redir(t_ast *node)
 {
-	t_redir		**head;
-	t_redir		**redirs;
-	
+	t_redir	**head;
+	t_redir	**redirs;
+
 	head = &node->cmd->redirs;
 	redirs = ft_calloc(2, sizeof(t_redir));
 	if (!redirs)
@@ -90,7 +88,7 @@ t_redir		**determine_redir(t_ast *node)
 		head = &(*head)->next;
 	}
 	head = &node->cmd->redirs;
-	while(*head)
+	while (*head)
 	{
 		if (((*head)->type == REDIR_OUT) || ((*head)->type == REDIR_APPEND))
 			redirs[1] = (*head);
