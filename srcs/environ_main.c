@@ -6,13 +6,13 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 22:00:59 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 15:04:22 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-#include <term.h>
 
+/* Duplicate a new malloc string but until before the letter given. */
 static char	*ft_strcdup(char *str, char letter)
 {
 	char	*string;
@@ -34,13 +34,14 @@ static char	*ft_strcdup(char *str, char letter)
 	return (string);
 }
 
-static void	set_key_value(char **str, char *key, char *value)
+/* Create a new allocated string with the key subsituted by the value. */
+static void	set_key_value(char **str, char *key, char *value, char *addr)
 {
 	char	*before_key;
 	char	*temp;
 	size_t	num;
 
-	before_key = ft_strcdup(*str, '$');
+	before_key = ft_strcdup(*str, *addr);
 	if (!before_key)
 		return ;
 	num = ft_strlen(key) + ft_strlen(before_key) + 1;
@@ -62,16 +63,16 @@ static void	set_key_value(char **str, char *key, char *value)
 	free(temp);
 }
 
-static void	key_value_init(t_vars *vars, char **str)
+/* Finds the key-value pair from the env struct, the parse it onto 
+ * set-key value. */
+static void	key_value_init(t_vars *vars, char **str, char *addr)
 {
 	char	*key;
 	char	*value;
 	t_env	*env;
-	char	*char_location;
 
 	env = vars->env;
-	char_location = ft_strchr(*str, '$') + 1;
-	key = ft_strcdup(ft_strchr(*str, '$') + 1, find_sym_env(char_location));
+	key = ft_strcdup(addr + 1, find_sym_env(addr + 1));
 	value = NULL;
 	while (env)
 	{
@@ -84,17 +85,28 @@ static void	key_value_init(t_vars *vars, char **str)
 			value = env->value;
 		env = env->next;
 	}
-	set_key_value(str, key, value);
+	set_key_value(str, key, value, addr);
 	if (!ft_strcmp(key, "?"))
 		free(value);
 	free(key);
 }
 
-/* TODO: Fix how to implement:
-*		- Make a function to traverse the sentance charac by charac.
-*		- if encounter \' just move to the next \'
-*		- but if encounter \" see inside got $, if got $, process it until the next \".
-*/
+/* Seperate function to disregard single quotes when inside double quotes. */
+static void	check_inside_dbl_quotes(t_vars *vars, char **head,
+				char **string)
+{
+	(*head)++;
+	while (**head && **head != '\"')
+	{
+		if (**head == '$')
+			key_value_init(vars, string, *head);
+		else
+			(*head)++;
+	}
+	return ;
+}
+
+/* detects '$' signs to proceed with expansions. */
 char	**detect_env(t_vars *vars, char **arr)
 {
 	int		i;
@@ -106,18 +118,18 @@ char	**detect_env(t_vars *vars, char **arr)
 	head = duped[i];
 	while (duped[i])
 	{
-		if (ft_strchr(head, '\"') != NULL)
-			if (ft_strchr(head, '$') != NULL)
-				key_value_init(vars, &duped[i]);
-		if (ft_strchr(head, '\'') != NULL)
+		while (*head)
 		{
-			head = move_char(head);
-			continue ;
+			if (*head == '\"')
+				check_inside_dbl_quotes(vars, &head, &duped[i]);
+			else if (*head == '\'')
+				head = move_char(head);
+			else if (*head == '$')
+				key_value_init(vars, &duped[i], head);
+			else
+				head++;
 		}
-		else if (ft_strchr(head, '$') != NULL)
-			key_value_init(vars, &duped[i]);
-		else
-			i++;
+		i++;
 		head = duped[i];
 	}
 	return (duped);
