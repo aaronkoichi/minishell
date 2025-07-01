@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 21:23:20 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 16:52:34 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	int		status;
 	char	**temp;
 	char	**original;
+	char	**data;
 	
 	if (!ft_strcmp(node->cmd->argv[0], "exit"))
 		exit (builtin_functions(node->cmd, vars));
@@ -123,8 +124,8 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	original = node->cmd->argv;
 	temp = detect_env(vars, node->cmd->argv);
 	node->cmd->argv = temp;
+	data = trim_execve(node->cmd);
 	// node->cmd->argv = detect_wildcard(node->cmd);
-	node->cmd->argv = trim_execve(node->cmd->argv);
 	command = prep_cmd(node->cmd, vars);
 	status = exec_cmd(node, redirs, command, vars);
 	if (status == 127)
@@ -136,6 +137,7 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	if (temp)
 		free_arr(temp);
 	node->cmd->argv = original;
+	free_arr(data);
 	return (vars->exit_code);
 }
 

@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 16:19:35 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 16:30:29 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,23 @@ typedef struct s_exec
 	int	pipe_fd[2];
 }	t_exec;
 
+
+/* only used in wildcards.*/
 typedef struct s_pos
 {
 	int	x;
 	int y;
 }	t_pos;
+
+/* for parsing wildcards with simplicity 
+ * string --> literal unquoted string.
+ * data   --> each characters data:
+ * 		  --> Q: quoted, U: Unquoted.*/
+typedef struct s_meta
+{
+	char	*string;
+	char	*data;
+}	t_meta;
 
 typedef struct s_file
 {
@@ -86,5 +98,5 @@ char		find_sym_env(char *string);
 char		*move_char(char *arr);
 char		*move_char_wild(char *arr);
 // execve_trim.c
-char		**trim_execve(char **arr);
+char		**trim_execve(t_cmd *cmd);
 #endif

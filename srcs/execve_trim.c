@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 15:48:42 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 17:53:10 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 16:51:22 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,20 @@ static size_t	count_without_quotes(char *arr)
 	return (count);
 }
 
-static void	alloc_words_without_quotes(char **string, char *original)
+static void	increment_quoted(char **string, char original, char **data, int *j)
+{
+	(*data)[++(*j)] = 'Q';
+	(*string)[*j] = original;
+}
+
+static void	increment_unquoted(char **string, char original, char **data, int *j)
+{
+	(*data)[++(*j)] = 'U';
+	(*string)[*j] = original;
+}
+
+static void	alloc_words_without_quotes(char **string, char *original,
+			char **data)
 {
 	int	i;
 	int	j;
@@ -52,33 +65,41 @@ static void	alloc_words_without_quotes(char **string, char *original)
 			if (original[i] == hold_char)
 				hold_char = -1;
 			else
-				(*string)[++j] = original[i];
+				increment_quoted(string, original[i], data, &j);
 		else
 			if (original[i] == 34 || original[i] == 39)
 				hold_char = original[i];
 			else
-				(*string)[++j] = original[i];
+				increment_unquoted(string, original[i], data, &j);
 	}
 	(*string)[++j] = '\0';
+	(*data)[j] = '\0';
 }
 
-char	**trim_execve(char **arr)
+char	**trim_execve(t_cmd *cmd)
 {
 	size_t	size;
 	int		i;
 	char	*temp;
+	char	**data;
 
 	i = 0;
 	size = 0;
 	temp = NULL;
-	while (arr[i])
+	while (cmd->argv[i])
+		i++;
+	data = malloc((i + 1) * sizeof(char *));
+	i = 0;
+	while (cmd->argv[i])
 	{
-		size = count_without_quotes(arr[i]);
+		size = count_without_quotes(cmd->argv[i]);
 		temp = malloc((size + 1) * sizeof(char));
-		alloc_words_without_quotes(&temp, arr[i]);
-		free(arr[i]);
-		arr[i] = temp;
+		data[i] = malloc((size + 1) * sizeof(char));
+		alloc_words_without_quotes(&temp, cmd->argv[i], &data[i]);
+		free(cmd->argv[i]);
+		cmd->argv[i] = temp;
 		i++;
 	}
-	return (arr);
+	data[i] = 0;
+	return (data);
 }
