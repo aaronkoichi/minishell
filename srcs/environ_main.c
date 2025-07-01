@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 22:38:29 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 22:47:19 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ static void	check_inside_dbl_quotes(t_vars *vars, char **head,
 				char **string)
 {
 	char	*ptr;
-	
+
 	ptr = *head;
 	ptr++;
 	while (*ptr && *ptr != '\"')
@@ -115,20 +115,17 @@ static void	check_inside_dbl_quotes(t_vars *vars, char **head,
 }
 
 /* detects '$' signs to proceed with expansions. */
-char	**detect_env(t_vars *vars, char **arr)
+char	**detect_env(t_vars *vars, char **duped)
 {
 	int		i;
 	char	*head;
-	char	**duped;
 
 	i = 0;
-	duped = ft_strdup_arr(arr);
 	head = duped[i];
 	while (duped[i])
 	{
 		while (head && *head)
 		{
-			printf("test =  %s\n", head);
 			if (*head == '\"')
 				check_inside_dbl_quotes(vars, &head, &duped[i]);
 			else if (*head == '\'')

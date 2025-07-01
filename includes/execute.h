@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 19:33:30 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 22:53:23 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,10 @@ int			function_tree_pipe_right(t_ast *node, t_vars *vars, t_exec *info);
 int			function_tree_pipe(t_ast *node, t_vars *vars);
 // exec_parse_cmd.c
 int			exec_cmd_main(t_ast *node, t_vars *vars);
+// exec_parse_cmd_utils.c
+void		touch_files(t_ast *node, t_redir **redirs);
 int			redirect_fd(t_redir **redirs);
+void		close_fds(void);
 // exec_parse_cmd_redirs.c
 int			redir_out(t_redir *redir);
 int			redir_in(t_redir *redir);

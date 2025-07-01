@@ -6,64 +6,12 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 21:40:35 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 22:59:47 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 #include "minishell.h"
-
-void	touch_files(t_ast *node, t_redir **redirs)
-{
-	t_redir	*head;
-	int		fd;
-
-	fd = 0;
-	head = node->cmd->redirs;
-	while (head != NULL)
-	{
-		if (ft_strncmp(head->filename, redirs[1]->filename,
-			ft_strlen(redirs[1]->filename)) != 0 && (head->type == REDIR_OUT
-			|| head->type == REDIR_APPEND))
-		{
-			fd = open(head->filename, O_CREAT, 0644);
-			close(fd);
-		}
-		else
-			(void)fd;
-		head = head->next;
-	}
-}
-
-int	redirect_fd(t_redir **redirs)
-{
-	int	status;
-
-	status = 0;
-	if (redirs != NULL)
-	{
-		if (redirs[0] != NULL)
-		{
-			status = redir_in(redirs[0]);
-			if (status < 0)
-				return (-1);
-		}
-		if (redirs[1] != NULL)
-		{
-			status = redir_out(redirs[1]);
-			if (status < 0)
-				return (-1);
-		}
-	}
-	return (0);
-}
-
-void	close_fd(void)
-{
-	close(0);
-	close(1);
-	close(2);
-}
 
 int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 {
@@ -91,7 +39,7 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 			free_arr(command);
 			free(redirs);
 			reset_fd(vars);
-			close_fd();
+			close_fds();
 			return (-2);
 		}
 		waitpid(fork_pid, &status, 0);
@@ -106,26 +54,34 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 	return (status);
 }
 
+static void	prep_wildcards_env(t_ast *node, t_vars *vars)
+{
+	char	**temp;
+	char	**wildcard_temp;
+	char	**data;
+
+	temp = ft_strdup_arr(node->cmd->argv);
+	temp = detect_env(vars, temp);
+	node->cmd->argv = temp;
+	data = trim_execve(node->cmd);
+	wildcard_temp = detect_wildcard(node->cmd, data);
+	free_arr(node->cmd->argv);
+	free_arr(data);
+	node->cmd->argv = wildcard_temp;
+}
+
 int	exec_cmd_main(t_ast *node, t_vars *vars)
 {
 	char	**command;
 	t_redir	**redirs;
 	int		status;
-	char	**temp;
-	char	**wildcard_temp;
 	char	**original;
-	char	**data;
 	
 	if (!ft_strcmp(node->cmd->argv[0], "exit"))
 		exit (builtin_functions(node->cmd, vars));
 	redirs = NULL;
 	original = node->cmd->argv;
-	temp = detect_env(vars, node->cmd->argv);
-	node->cmd->argv = temp;
-	data = trim_execve(node->cmd);
-	wildcard_temp = detect_wildcard(node->cmd, data);
-	free_arr(temp);
-	node->cmd->argv = wildcard_temp;
+	prep_wildcards_env(node, vars);
 	command = prep_cmd(node->cmd, vars);
 	status = exec_cmd(node, redirs, command, vars);
 	if (status == 127)
@@ -134,11 +90,8 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 		vars->exit_code = -2;
 	else
 		vars->exit_code = WEXITSTATUS(status);
-	// if (temp)
-	// 	free_arr(temp);
-	free_arr(wildcard_temp);
+	free_arr(node->cmd->argv);
 	node->cmd->argv = original;
-	free_arr(data);
 	return (vars->exit_code);
 }
 
