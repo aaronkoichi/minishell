@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/25 17:32:01 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:40:27 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static bool	is_valid_num(char *str)
 	}
 	return (true);
 }
-static void close_fd(t_vars *vars)
+
+static void	close_fd(t_vars *vars)
 {
 	close(0);
 	close(1);

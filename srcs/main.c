@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/02 00:35:37 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 00:38:59 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,12 @@ void	catch_sigint_exit_code(t_vars *vars)
 	}
 }
 
+static int	exit_one_two_sev(t_vars *vars)
+{
+	destroy_vars(vars);
+	exit(127);
+}
+
 void	start_usr_input(t_vars *vars)
 {
 	char	*input;
@@ -320,10 +326,7 @@ void	start_usr_input(t_vars *vars)
 		ft_lstclear_ast_tree(&ast_tree);
 		ft_lstclear_token(&token_list);
 		if (vars->exit_code == -2)
-		{
-			destroy_vars(vars);
-			exit(127);
-		}
+			exit (exit_one_two_sev(vars));
 		free(input);
 	}
 	rl_clear_history();
