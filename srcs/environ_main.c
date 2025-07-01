@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 15:04:22 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/01 22:38:29 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,23 @@ static void	key_value_init(t_vars *vars, char **str, char *addr)
 static void	check_inside_dbl_quotes(t_vars *vars, char **head,
 				char **string)
 {
-	(*head)++;
-	while (**head && **head != '\"')
+	char	*ptr;
+	
+	ptr = *head;
+	ptr++;
+	while (*ptr && *ptr != '\"')
 	{
-		if (**head == '$')
-			key_value_init(vars, string, *head);
+		if (*ptr == '$')
+		{
+			key_value_init(vars, string, ptr);
+			ptr = *string + (ptr - *head);
+		}
 		else
-			(*head)++;
+			ptr++;
 	}
-	return ;
+	if (*ptr && *ptr == '\"')
+		ptr++;
+	*head = ptr;
 }
 
 /* detects '$' signs to proceed with expansions. */
@@ -118,19 +126,22 @@ char	**detect_env(t_vars *vars, char **arr)
 	head = duped[i];
 	while (duped[i])
 	{
-		while (*head)
+		while (head && *head)
 		{
+			printf("test =  %s\n", head);
 			if (*head == '\"')
 				check_inside_dbl_quotes(vars, &head, &duped[i]);
 			else if (*head == '\'')
 				head = move_char(head);
 			else if (*head == '$')
+			{
 				key_value_init(vars, &duped[i], head);
+				head = duped[i];
+			}
 			else
 				head++;
 		}
-		i++;
-		head = duped[i];
+		head = duped[++i];
 	}
 	return (duped);
 }
