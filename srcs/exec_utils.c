@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 20:47:07 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 23:47:49 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 22:38:26 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ int	env_size(t_env *env)
 	i = 0;
 	while (head)
 	{
-		i++;
+		if (head->key && head->value)
+			i++;
 		head = head->next;
 	}
 	return (i);
@@ -72,11 +73,14 @@ char	**construct_envp(t_vars *vars)
 	string = malloc((env_size(head) + 1) * sizeof(char *));
 	while (head)
 	{
-		string[i] = ft_strjoin(head->key, "=");
-		temp = ft_strjoin(string[i], head->value);
-		free(string[i]);
-		string[i] = temp;
-		i++;
+		if (head->key && head->value)
+		{
+			string[i] = ft_strjoin(head->key, "=");
+			temp = ft_strjoin(string[i], head->value);
+			free(string[i]);
+			string[i] = temp;
+			i++;
+		}
 		head = head->next;
 	}
 	string[i] = 0;
