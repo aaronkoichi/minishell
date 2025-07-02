@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/02 00:35:59 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:37:48 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,13 @@ typedef struct s_vars
 	char	*oldpwd_dir;
 }	t_vars;
 
-typedef int	(*t_builtin_func)(t_cmd *cmd, t_env **env, t_vars *vars);
+typedef struct s_str_dat
+{
+	char	**command;
+	char	**original;
+}	t_str_dat;
+
+typedef int	(*t_builtin_func)(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 typedef struct s_builtin_map
 {
@@ -151,7 +157,7 @@ extern volatile
 sig_atomic_t g_signal;
 
 // builtin_cd.c
-int				builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars);
+int				builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 // builtin_cd_utils.c
 t_env			*find_env_node_key(t_env *env, char *key);
@@ -159,28 +165,28 @@ int				update_pwd_dirs(t_vars *vars);
 int				update_env_value(t_env *node, char *value);
 
 // builtin_echo.c
-int				builtin_echo(t_cmd *cmd, t_env **env, t_vars *vars);
+int				builtin_echo(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 // builtin_env.c
-int				builtin_env(t_cmd *cmd, t_env **env, t_vars *vars);
+int				builtin_env(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 // builtin_exit.c
-int				builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars);
+int				builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 // builtin_export.c
-int				builtin_export(t_cmd *cmd, t_env **env, t_vars *vars);
+int				builtin_export(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 // builtin_export_prt.c
 void			export_print_env(t_env **env);
 
 // builtin_pwd.c
-int				builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars);
+int				builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 // builtin_unset.c
-int				builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars);
+int				builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
 // builtin.c
-int				builtin_functions(t_cmd *cmd, t_vars *vars);
+int				builtin_functions(t_cmd *cmd, t_vars *vars, t_str_dat dat);
 // envp.c
 char			*get_env_key(char *env_line, int *i);
 char			*get_env_value(char *env_line);

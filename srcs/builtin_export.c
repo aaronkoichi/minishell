@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 15:48:37 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/17 16:35:09 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:38:05 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,10 @@ static int	export_add_entry(t_cmd *cmd, t_env **env)
 	return (0);
 }
 
-int	builtin_export(t_cmd *cmd, t_env **env, t_vars *vars)
+int	builtin_export(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat)
 {
 	(void)vars;
+	(void)dat;
 	if (cmd->argc == 1)
 	{
 		export_print_env(env);

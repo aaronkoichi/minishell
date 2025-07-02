@@ -6,19 +6,20 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:16:33 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/24 20:58:50 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:40:40 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars)
+int	builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat)
 {
 	char	*cwd;
 
 	(void)cmd;
 	(void)env;
 	(void)vars;
+	(void)dat;
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 18:58:16 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/10 19:00:49 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/02 12:40:57 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,10 @@ int	cd_path(t_cmd *cmd, t_env **env, t_vars *vars)
 	return (0);
 }
 
-int	builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars)
+int	builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat)
 {
 	(void)env;
+	(void)dat;
 	if (cmd->argc > 2)
 	{
 		ft_putstr_fd("cd: too many arguments\n", 2);

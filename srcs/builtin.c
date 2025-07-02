@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 15:35:28 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/17 15:24:13 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:36:35 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ static const t_builtin_map	*match_builtin(const t_builtin_map *table,
 	return (NULL);
 }
 
-int	builtin_functions(t_cmd *cmd, t_vars *vars)
+int	builtin_functions(t_cmd *cmd, t_vars *vars, t_str_dat dat)
 {
 	const t_builtin_map	*match;
 
 	match = match_builtin(get_builtin_map(), cmd);
 	if (match != NULL)
-		return (match->func(cmd, &vars->env, vars));
+		return (match->func(cmd, &vars->env, vars, dat));
 	return (-1);
 }

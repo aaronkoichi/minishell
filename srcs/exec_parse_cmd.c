@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 23:33:03 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:35:00 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	perform_run_cmd(char **command, t_vars *vars,
 }
 
 /* stat_fork: 0 --> status, 1 --> fork_pid. */
-int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
+int	exec_cmd(t_ast *node, t_redir **redirs, t_str_dat dat, t_vars *vars)
 {
 	int		stat_fork[2];
 	char	**envp;
@@ -52,18 +52,18 @@ int	exec_cmd(t_ast *node, t_redir **redirs, char **command, t_vars *vars)
 	stat_fork[0] = redirect_fd(redirs);
 	if (stat_fork[0] != 0)
 		return (EXIT_FAILURE);
-	if (builtin_functions(node->cmd, vars) != -1)
+	if (builtin_functions(node->cmd, vars, dat) != -1)
 		reset_fd(vars);
 	else
 	{
 		stat_fork[1] = fork();
 		if (stat_fork[1] == 0)
-			return (perform_run_cmd(command, vars, redirs, envp));
+			return (perform_run_cmd(dat.command, vars, redirs, envp));
 		waitpid(stat_fork[1], &stat_fork[0], 0);
 	}
 	if (stat_fork[0] == 0 && redirs != NULL && redirs[1] != NULL)
 		touch_files(node, redirs);
-	reset_free_default(command, vars, redirs, envp);
+	reset_free_default(dat.command, vars, redirs, envp);
 	return (stat_fork[0]);
 }
 
@@ -85,18 +85,15 @@ static void	prep_wildcards_env(t_ast *node, t_vars *vars)
 
 int	exec_cmd_main(t_ast *node, t_vars *vars)
 {
-	char	**command;
-	t_redir	**redirs;
-	int		status;
-	char	**original;
+	t_str_dat	dat;
+	t_redir		**redirs;
+	int			status;
 
-	if (!ft_strcmp(node->cmd->argv[0], "exit"))
-		exit (builtin_functions(node->cmd, vars));
 	redirs = NULL;
-	original = node->cmd->argv;
+	dat.original = node->cmd->argv;
 	prep_wildcards_env(node, vars);
-	command = prep_cmd(node->cmd, vars);
-	status = exec_cmd(node, redirs, command, vars);
+	dat.command = prep_cmd(node->cmd, vars);
+	status = exec_cmd(node, redirs, dat, vars);
 	if (status == 127)
 		vars->exit_code = 127;
 	else if (status == -2)
@@ -104,6 +101,6 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 	else
 		vars->exit_code = WEXITSTATUS(status);
 	free_arr(node->cmd->argv);
-	node->cmd->argv = original;
+	node->cmd->argv = dat.original;
 	return (vars->exit_code);
 }

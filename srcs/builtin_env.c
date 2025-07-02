@@ -6,18 +6,19 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 15:58:33 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/10 14:31:24 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/02 12:40:21 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_env(t_cmd *cmd, t_env **env, t_vars *vars)
+int	builtin_env(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat)
 {
 	t_env	*temp;
 
 	(void)cmd;
 	(void)vars;
+	(void)dat;
 	temp = *env;
 	while (temp != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/02 00:40:27 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:46:07 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,18 @@ static void	close_fd(t_vars *vars)
 	close(2);
 }
 
-int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars)
+static void	terminate_default(t_cmd *cmd, t_vars *vars, t_str_dat dat)
+{
+	close_fd(vars);
+	free_arr(cmd->argv);
+	cmd->argv = dat.original;
+	free_arr(dat.command);
+	ft_lstclear_ast_tree(&vars->ast_tree);
+	ft_lstclear_token(&vars->token_list);
+	destroy_vars(vars);
+}
+
+int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat)
 {
 	unsigned int	code;
 
@@ -62,9 +73,6 @@ int	builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars)
 	}
 	else
 		code = ft_atoi(cmd->argv[1]);
-	close_fd(vars);
-	ft_lstclear_ast_tree(&vars->ast_tree);
-	ft_lstclear_token(&vars->token_list);
-	destroy_vars(vars);
+	terminate_default(cmd, vars, dat);
 	exit(code % 256);
 }
