@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:47:07 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/02 12:39:18 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:56:53 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ int	builtin_echo(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat)
 	(void)env;
 	(void)dat;
 	i = 1;
-	if (ft_strncmp(cmd->argv[i], "-n", 3) == 0)
+	if (cmd->argc == 1)
+		ft_putstr_fd("\n", 1);
+	else if (ft_strncmp(cmd->argv[i], "-n", 3) == 0)
 		echo_print(cmd, i + 1);
 	else
 	{
