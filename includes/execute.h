@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/02 12:35:52 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/02 12:47:35 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <dirent.h>
-# include "../libft/libft.h"
+# include "../libft/includes/libft.h"
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
