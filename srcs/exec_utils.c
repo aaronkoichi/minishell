@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 20:47:07 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/02 22:38:26 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/03 13:12:51 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp)
 	execve(exec[0], exec, envp);
 	free_arr(envp);
 	perror("execve");
-	return (127);
+	return (-2);
 }
 
 void	reset_fd(t_vars *vars)
