@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 19:46:29 by jthiew            #+#    #+#             */
-/*   Updated: 2025/06/04 13:46:52 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/03 13:54:10 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,12 @@ int	hdoc_handle_input(char *input, char **content, t_vars *vars)
 	return (0);
 }
 
-char	*get_hdoc_input(char *eof, t_vars *vars)
+char	*get_hdoc_input(char *eof, t_vars *vars, int *i)
 {
 	char	*content;
 	char	*input;
-	int		i;
 
-	i = 0;
+	*i = 0;
 	content = ft_calloc(1, sizeof(char));
 	if (content == NULL)
 		return (NULL);
@@ -73,11 +72,13 @@ char	*get_hdoc_input(char *eof, t_vars *vars)
 			break ;
 		g_signal = 0;
 		if (ft_strncmp(input, eof, ft_strlen(eof) + 1) == 0)
+		{
+			content = append_line(content, ft_strdup(""), (*i)++);
 			break ;
-		content = append_line(content, input, i);
+		}
+		content = append_line(content, input, (*i)++);
 		if (content == NULL)
 			return (NULL);
-		i++;
 	}
 	free(input);
 	return (content);
@@ -87,11 +88,13 @@ char	*get_hdoc_content(char *eof, t_vars *vars)
 {
 	char	*content;
 	char	*eof_strip;
+	int		i;
 
+	i = 0;
 	eof_strip = strip_quotes_eof(eof);
 	if (eof_strip == NULL)
 		return (NULL);
-	content = get_hdoc_input(eof_strip, vars);
+	content = get_hdoc_input(eof_strip, vars, &i);
 	free(eof_strip);
 	if (content == NULL)
 		return (NULL);
