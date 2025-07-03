@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/03 14:53:24 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/03 19:45:34 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	function_tree_seq(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 	status = exec_main(node->left, vars, tree, token);
 	if (status == -2)
 		return (-2);
-	else
+	else if (node->right != NULL)
 		exec_main(node->right, vars, tree, token);
 	return (0);
 }
@@ -30,9 +30,10 @@ int	function_tree_and(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 	t_exec	info;
 
 	memset(&info, 0, sizeof(t_exec));
-	if (exec_main(node->left, vars, tree, token) == 0)
-		exec_main(node->right, vars, tree, token);
-	return (WEXITSTATUS(info.status));
+	info.status = exec_main(node->left, vars, tree, token);
+	if (info.status == 0)
+		info.status = exec_main(node->right, vars, tree, token);
+	return (info.status);
 }
 
 int	function_tree_or(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
@@ -40,9 +41,10 @@ int	function_tree_or(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 	t_exec	info;
 
 	memset(&info, 0, sizeof(t_exec));
-	if (exec_main(node->left, vars, tree, token) != 0)
-		exec_main(node->right, vars, tree, token);
-	return (WEXITSTATUS(info.status));
+	info.status = exec_main(node->left, vars, tree, token);
+	if (info.status != 0)
+		info.status = exec_main(node->right, vars, tree, token);
+	return (info.status);
 }
 
 int	function_tree(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
@@ -58,7 +60,10 @@ int	function_tree(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 	else if (node->type == NODE_PIPE)
 		return (function_tree_pipe(node, vars, tree, token));
 	else if (node->type == NODE_COMMAND)
+	{
+		// printf("node: command : %s %s\n", node->cmd->argv[0], node->cmd->argv[1]);
 		return (exec_cmd_main(node, vars));
+	}
 	return (1);
 }
 

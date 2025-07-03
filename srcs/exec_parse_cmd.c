@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/03 13:44:14 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/03 15:47:00 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 static void	reset_free_default(char **command, t_vars *vars,
 				t_redir **redirs, char **envp)
 {
+	(void)vars;
 	free_arr(command);
 	free(redirs);
-	reset_fd(vars);
 	if (envp != NULL)
 		free_arr(envp);
 	reset_fd(vars);
@@ -33,7 +33,6 @@ static int	perform_run_cmd(char **command, t_vars *vars,
 	reset_fd(vars);
 	if (envp != NULL)
 		free_arr(envp);
-	// reset_fd(vars);
 	close_fds();
 	return (-2);
 }
