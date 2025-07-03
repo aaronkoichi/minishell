@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/03 15:47:00 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 00:00:00 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static void	reset_free_default(char **command, t_vars *vars,
 	free(redirs);
 	if (envp != NULL)
 		free_arr(envp);
-	reset_fd(vars);
 }
 
 static int	perform_run_cmd(char **command, t_vars *vars,
@@ -53,7 +52,7 @@ int	exec_cmd(t_ast *node, t_redir **redirs, t_str_dat dat, t_vars *vars)
 	if (stat_fork[0] != 0)
 		return (EXIT_FAILURE);
 	if (builtin_functions(node->cmd, vars, dat) != -1)
-		reset_fd(vars);
+		;
 	else
 	{
 		stat_fork[1] = fork();

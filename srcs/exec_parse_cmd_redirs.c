@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 23:42:51 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 00:01:06 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	redir_out(t_redir *redir)
 
 	fd = 0;
 	if (redir->type == REDIR_OUT)
-		fd = open(redir->filename, O_CREAT | O_WRONLY, 0644);
+		fd = open(redir->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else
 		fd = open(redir->filename, O_CREAT | O_APPEND | O_WRONLY, 0644);
 	if (fd < 0)
@@ -78,7 +78,7 @@ t_redir	**determine_redir(t_ast *node)
 	t_redir	**redirs;
 
 	head = &node->cmd->redirs;
-	redirs = ft_calloc(2, sizeof(t_redir));
+	redirs = ft_calloc(2, sizeof(t_redir *));
 	if (!redirs)
 		return (NULL);
 	while (*head)

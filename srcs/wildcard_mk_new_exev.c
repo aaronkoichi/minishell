@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:33:56 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/02 00:31:50 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 00:06:25 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static char	**create_fnmatch(char *str, char *metadata)
 	readdir_three_times(directory, &file);
 	while (file)
 	{
-		if (ft_fnmatch(str, file->d_name, metadata))
+		if (ft_fnmatch(str, file->d_name, metadata) && file->d_name[0] != '.')
 		{
 			ft_lstaddback_file(&tmp, file->d_name);
 			count++;
