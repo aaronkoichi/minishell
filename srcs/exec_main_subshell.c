@@ -6,13 +6,13 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 23:35:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 23:35:58 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/03 14:34:45 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-int	function_tree_subshell(t_ast *node, t_vars *vars)
+int	function_tree_subshell(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 {
 	t_exec	info;
 
@@ -30,7 +30,7 @@ int	function_tree_subshell(t_ast *node, t_vars *vars)
 		perror("subshell\n");
 	if (info.fork_pid[0] == 0)
 	{
-		exec_main(node->left, vars);
+		exec_main(node->left, vars, tree, token);
 		exit(1);
 	}
 	else

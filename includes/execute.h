@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/02 12:47:35 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/03 14:40:51 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,17 @@ typedef struct s_file
 	struct s_file	*next;
 }					t_file;
 
+
+typedef struct s_wrapper
+{
+	t_ast	*tree;
+	t_token	*token;
+}	t_wrapper;
+
 // exec_main.c
-int			exec_main(t_ast *node, t_vars *vars);
+int			exec_main(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
 // exec_main_subshell.c
-int			function_tree_subshell(t_ast *node, t_vars *vars);
+int			function_tree_subshell(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
 // exec_utils.c
 void		free_arr(char **arr);
 int			run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp);
@@ -55,9 +62,9 @@ char		**construct_envp(t_vars *vars);
 // prep_cmd.c
 char		**prep_cmd(t_cmd *cmd, t_vars *vars);
 // exec_pipe.c
-int			function_tree_pipe_left(t_ast *node, t_vars *vars, t_exec *info);
-int			function_tree_pipe_right(t_ast *node, t_vars *vars, t_exec *info);
-int			function_tree_pipe(t_ast *node, t_vars *vars);
+int			function_tree_pipe_left(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper);
+int			function_tree_pipe_right(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper);
+int			function_tree_pipe(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
 // exec_parse_cmd.c
 int			exec_cmd_main(t_ast *node, t_vars *vars);
 // exec_parse_cmd_utils.c
@@ -69,7 +76,6 @@ int			redir_out(t_redir *redir);
 int			redir_in(t_redir *redir);
 t_redir		**determine_redir(t_ast *node);
 int			subshell_redir(t_ast *node);
-
 // for handling the wildcards
 // wildcard.c
 char		**detect_wildcard(t_cmd *cmd, char **metadata);
