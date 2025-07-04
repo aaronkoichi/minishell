@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/05 01:13:45 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:29:30 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,8 @@ typedef struct s_str_dat
 	char	**original;
 }	t_str_dat;
 
-typedef int	(*t_builtin_func)(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+typedef int	(*t_builtin_func)(t_cmd *cmd, t_env **env,
+				t_vars *vars, t_str_dat dat);
 
 typedef struct s_builtin_map
 {
@@ -169,7 +170,7 @@ typedef struct s_exec
 typedef struct s_pos
 {
 	int	x;
-	int y;
+	int	y;
 }	t_pos;
 
 typedef struct s_file
@@ -185,7 +186,8 @@ typedef struct s_wrapper
 }	t_wrapper;
 // PARSING
 // builtin_cd.c
-int				builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+int				builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars,
+					t_str_dat dat);
 
 // builtin_cd_utils.c
 t_env			*find_env_node_key(t_env *env, char *key);
@@ -193,28 +195,35 @@ int				update_pwd_dirs(t_vars *vars);
 int				update_env_value(t_env *node, char *value);
 
 // builtin_echo.c
-int				builtin_echo(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+int				builtin_echo(t_cmd *cmd, t_env **env, t_vars *vars,
+					t_str_dat dat);
 
 // builtin_env.c
-int				builtin_env(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+int				builtin_env(t_cmd *cmd, t_env **env, t_vars *vars,
+					t_str_dat dat);
 
 // builtin_exit.c
-int				builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+int				builtin_exit(t_cmd *cmd, t_env **env, t_vars *vars,
+					t_str_dat dat);
 
 // builtin_export.c
-int				builtin_export(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+int				builtin_export(t_cmd *cmd, t_env **env, t_vars *vars,
+					t_str_dat dat);
 
 // builtin_export_prt.c
 void			export_print_env(t_env **env);
 
 // builtin_pwd.c
-int				builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+int				builtin_pwd(t_cmd *cmd, t_env **env, t_vars *vars,
+					t_str_dat dat);
 
 // builtin_unset.c
-int				builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
+int				builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars,
+					t_str_dat dat);
 
 // builtin.c
-int				builtin_functions(t_cmd *cmd, t_vars *vars, t_str_dat dat);
+int				builtin_functions(t_cmd *cmd, t_vars *vars,
+					t_str_dat dat);
 // envp.c
 char			*get_env_key(char *env_line, int *i);
 char			*get_env_value(char *env_line);
@@ -296,55 +305,62 @@ void			start_usr_input(t_vars *vars);
 
 // ==========================EXECUTION========================
 // exec_main.c
-int			exec_main(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
+int				exec_main(t_ast *node, t_vars *vars,
+					t_ast *tree, t_token *token);
 // exec_main_subshell.c
-int			function_tree_subshell(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
+int				function_tree_subshell(t_ast *node, t_vars *vars, t_ast *tree,
+					t_token *token);
 // exec_utils.c
-void		free_arr(char **arr);
-int			run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp);
-void		reset_fd(t_vars *vars);
-char		**construct_envp(t_vars *vars);
+void			free_arr(char **arr);
+int				run_cmd(char **exec, t_vars *vars, t_redir **redirs,
+					char **envp);
+void			reset_fd(t_vars *vars);
+char			**construct_envp(t_vars *vars);
 // prep_cmd.c
-char		**prep_cmd(t_cmd *cmd, t_vars *vars);
+char			**prep_cmd(t_cmd *cmd, t_vars *vars);
 // exec_pipe.c
-int			function_tree_pipe_left(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper);
-int			function_tree_pipe_right(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper);
-int			function_tree_pipe(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
+int				function_tree_pipe_left(t_ast *node, t_vars *vars, t_exec *info,
+					t_wrapper wrapper);
+int				function_tree_pipe_right(t_ast *node, t_vars *vars,
+					t_exec *info, t_wrapper wrapper);
+int				function_tree_pipe(t_ast *node, t_vars *vars, t_ast *tree,
+					t_token *token);
 // exec_parse_cmd.c
-int			exec_cmd_main(t_ast *node, t_vars *vars);
+int				exec_cmd_main(t_ast *node, t_vars *vars);
 // exec_parse_cmd_utils.c
-void		touch_files(t_ast *node, t_redir **redirs);
-int			redirect_fd(t_redir **redirs);
-void		close_fds(void);
+void			touch_files(t_ast *node, t_redir **redirs);
+int				redirect_fd(t_redir **redirs);
+void			close_fds(void);
 // exec_parse_cmd_redirs.c
-int			redir_out(t_redir *redir);
-int			redir_in(t_redir *redir);
-t_redir		**determine_redir(t_ast *node);
-int			subshell_redir(t_ast *node);
+int				redir_out(t_redir *redir);
+int				redir_in(t_redir *redir);
+t_redir			**determine_redir(t_ast *node);
+int				subshell_redir(t_ast *node);
 // for handling the wildcards
 // wildcard.c
-char		**detect_wildcard(t_cmd *cmd, char **metadata);
+char			**detect_wildcard(t_cmd *cmd, char **metadata);
 // wildcard_fnmatch.c
-int			ft_fnmatch(const char *pattern, const char *filename, const char *metadata);
+int				ft_fnmatch(const char *pattern, const char *filename,
+					const char *metadata);
 /*wildcard_utils.c*/
-void		free_array(char **arr);
-int			count_trim_lines(char **arr, const char *filename);
-void		ft_lstaddback_file(t_file **file, char *string);
-int			ft_lstsize_file(t_file *file);
-void		ft_lstclear_file(t_file **file, void (*del)(void *));
+void			free_array(char **arr);
+int				count_trim_lines(char **arr, const char *filename);
+void			ft_lstaddback_file(t_file **file, char *string);
+int				ft_lstsize_file(t_file *file);
+void			ft_lstclear_file(t_file **file, void (*del)(void *));
 // wildcard_mk_new_exev.c
-t_file		*mk_new_execve(t_file **files, char *str, char *metadata);
+t_file			*mk_new_execve(t_file **files, char *str, char *metadata);
 // wildcard_qsort.c
-char		**qsort_main(char **arr);
+char			**qsort_main(char **arr);
 // environ_main.c
-char		**detect_env(t_vars *vars, char **arr);
+char			**detect_env(t_vars *vars, char **arr);
 // environ_utils.c
-char		**ft_strdup_arr(char **arr);
-char		find_sym_env(char *string);
+char			**ft_strdup_arr(char **arr);
+char			find_sym_env(char *string);
 // exec_environ_trim.c
-char		*move_char(char *arr);
-char		*move_char_wild(char *arr);
+char			*move_char(char *arr);
+char			*move_char_wild(char *arr);
 // execve_trim.c
-char		**trim_execve(t_cmd *cmd);
+char			**trim_execve(t_cmd *cmd);
 
 #endif
