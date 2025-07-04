@@ -45,9 +45,9 @@ SRCS_LIST = main.c					\
 			builtin_pwd.c			\
 			builtin_unset.c			\
 			wildcard.c 				\
+			wildcard_qsort.c 		\
 			wildcard_fnmatch.c		\
 			wildcard_utils.c		\
-			wildcard_sort.c			\
 			wildcard_mk_new_exev.c	\
 			environ_main.c			\
 			exec_environ_trim.c		\
