@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:31:46 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/03 14:40:51 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 13:24:00 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ int			ft_lstsize_file(t_file *file);
 void		ft_lstclear_file(t_file **file, void (*del)(void *));
 // wildcard_mk_new_exev.c
 t_file		*mk_new_execve(t_file **files, char *str, char *metadata);
+//wildcard_sort.c 
+int 		ft_strcmp_lower(char *s1, char *s2);
 // environ_main.c
 char		**detect_env(t_vars *vars, char **arr);
 // environ_utils.c

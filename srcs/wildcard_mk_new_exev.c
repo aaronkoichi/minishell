@@ -6,12 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:33:56 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 00:06:25 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 13:24:02 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
-#include <stddef.h>
 
 static char	**create_arr_from_t_file(t_file *file)
 {
@@ -36,6 +35,7 @@ static char	**sort_readdir_helper(t_file *unsorted)
 	char	*temp;
 	char	**sorted;
 	int		i;
+	char	*lower;
 
 	temp = NULL;
 	i = -1;
@@ -44,13 +44,15 @@ static char	**sort_readdir_helper(t_file *unsorted)
 		return (NULL);
 	while (sorted[++i + 1])
 	{
-		if (ft_strcmp(sorted[i], sorted[i + 1]) > 0)
+		lower = NULL;
+		if (ft_strcmp_lower(sorted[i], sorted[i + 1]) > 0)
 		{
 			temp = sorted[i];
 			sorted[i] = sorted[i + 1];
 			sorted[i + 1] = temp;
 			i = -1;
 		}
+		free(lower);
 	}
 	return (sorted);
 }
