@@ -6,11 +6,10 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 18:27:39 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:16:38 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
 #include "minishell.h"
 
 int	redir_out(t_redir *redir)

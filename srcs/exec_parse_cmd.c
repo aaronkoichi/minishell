@@ -6,11 +6,10 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 18:36:10 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:16:21 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
 #include "minishell.h"
 
 static void	reset_free_default(char **command, t_vars *vars,

@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 20:09:08 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 23:34:07 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:15:55 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
 char	*move_char_wild(char *arr)
 {

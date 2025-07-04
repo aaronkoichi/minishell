@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/02 12:37:48 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:13:45 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <term.h>
 # include <unistd.h>
 
+// PARSING
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -156,6 +157,33 @@ typedef struct s_builtin_map
 extern volatile
 sig_atomic_t g_signal;
 
+// ==========================EXECUTION========================
+typedef struct s_exec
+{
+	int	status;
+	int	fork_pid[2];
+	int	pipe_fd[2];
+}	t_exec;
+
+/* only used in wildcards.*/
+typedef struct s_pos
+{
+	int	x;
+	int y;
+}	t_pos;
+
+typedef struct s_file
+{
+	char			*file;
+	struct s_file	*next;
+}					t_file;
+
+typedef struct s_wrapper
+{
+	t_ast	*tree;
+	t_token	*token;
+}	t_wrapper;
+// PARSING
 // builtin_cd.c
 int				builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars, t_str_dat dat);
 
@@ -265,4 +293,58 @@ void			init_vars(t_vars *vars, char **envp);
 // main.c
 t_ast			*parse_input(t_token **token_list, char *input, t_vars *vars);
 void			start_usr_input(t_vars *vars);
+
+// ==========================EXECUTION========================
+// exec_main.c
+int			exec_main(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
+// exec_main_subshell.c
+int			function_tree_subshell(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
+// exec_utils.c
+void		free_arr(char **arr);
+int			run_cmd(char **exec, t_vars *vars, t_redir **redirs, char **envp);
+void		reset_fd(t_vars *vars);
+char		**construct_envp(t_vars *vars);
+// prep_cmd.c
+char		**prep_cmd(t_cmd *cmd, t_vars *vars);
+// exec_pipe.c
+int			function_tree_pipe_left(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper);
+int			function_tree_pipe_right(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper);
+int			function_tree_pipe(t_ast *node, t_vars *vars, t_ast *tree, t_token *token);
+// exec_parse_cmd.c
+int			exec_cmd_main(t_ast *node, t_vars *vars);
+// exec_parse_cmd_utils.c
+void		touch_files(t_ast *node, t_redir **redirs);
+int			redirect_fd(t_redir **redirs);
+void		close_fds(void);
+// exec_parse_cmd_redirs.c
+int			redir_out(t_redir *redir);
+int			redir_in(t_redir *redir);
+t_redir		**determine_redir(t_ast *node);
+int			subshell_redir(t_ast *node);
+// for handling the wildcards
+// wildcard.c
+char		**detect_wildcard(t_cmd *cmd, char **metadata);
+// wildcard_fnmatch.c
+int			ft_fnmatch(const char *pattern, const char *filename, const char *metadata);
+/*wildcard_utils.c*/
+void		free_array(char **arr);
+int			count_trim_lines(char **arr, const char *filename);
+void		ft_lstaddback_file(t_file **file, char *string);
+int			ft_lstsize_file(t_file *file);
+void		ft_lstclear_file(t_file **file, void (*del)(void *));
+// wildcard_mk_new_exev.c
+t_file		*mk_new_execve(t_file **files, char *str, char *metadata);
+// wildcard_qsort.c
+char		**qsort_main(char **arr);
+// environ_main.c
+char		**detect_env(t_vars *vars, char **arr);
+// environ_utils.c
+char		**ft_strdup_arr(char **arr);
+char		find_sym_env(char *string);
+// exec_environ_trim.c
+char		*move_char(char *arr);
+char		*move_char_wild(char *arr);
+// execve_trim.c
+char		**trim_execve(t_cmd *cmd);
+
 #endif

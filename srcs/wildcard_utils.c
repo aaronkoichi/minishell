@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:34:53 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/02 00:33:23 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:16:58 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
 void	free_array(char **arr)
 {

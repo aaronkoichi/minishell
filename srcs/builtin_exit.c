@@ -6,12 +6,11 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/04 18:16:15 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:15:37 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execute.h"
 
 static bool	is_valid_num(char *str)
 {
@@ -27,7 +26,7 @@ static bool	is_valid_num(char *str)
 	return (true);
 }
 
-static void	close_fd()
+static void	close_fd(void)
 {
 	close(0);
 	close(1);

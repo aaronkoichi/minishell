@@ -6,11 +6,10 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 23:35:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 00:09:11 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:16:44 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
 #include "minishell.h"
 
 static void	clean_subshell(t_ast *tree, t_token *token, t_vars *vars)

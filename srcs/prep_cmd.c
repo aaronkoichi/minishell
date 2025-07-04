@@ -6,11 +6,10 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 16:23:40 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/03 12:30:28 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:17:25 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
 #include "minishell.h"
 
 static char	**find_full_cmd(char **path, char **cmd_arr)

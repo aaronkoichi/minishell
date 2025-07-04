@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 21:37:25 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/05 01:03:25 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:15:15 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
 int	arr_size(char **arr)
 {
@@ -22,7 +22,7 @@ int	arr_size(char **arr)
 	return (i);
 }
 
-size_t partition(char **arr, int low, int high)
+int	partition(char **arr, int low, int high)
 {
 	char	*pivot;
 	char	*temp;
@@ -65,8 +65,8 @@ void	quick_sort(char **arr, int low, int high)
 
 char	**qsort_main(char **arr)
 {
-	int	len;
-	char 	**duped;
+	int		len;
+	char	**duped;
 
 	duped = ft_strdup_arr(arr);
 	len = arr_size(arr);

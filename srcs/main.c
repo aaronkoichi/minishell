@@ -6,12 +6,11 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 11:49:35 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/03 14:30:02 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:17:18 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execute.h"
 // ------------------------- test print token ---------------------------------
 // int	ft_lstsize_token(t_token *lst)
 // {

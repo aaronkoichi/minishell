@@ -6,11 +6,10 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 22:48:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 18:27:54 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:16:30 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
 #include "minishell.h"
 
 void	touch_files(t_ast *node, t_redir **redirs)

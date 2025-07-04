@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:41:04 by zlee              #+#    #+#             */
-/*   Updated: 2025/06/26 16:58:27 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:16:11 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
 /* Finds where the string should end.
  * Continue if is_alnum is true. or "_" is true.

@@ -6,11 +6,10 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 20:49:51 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:15:44 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
 #include "minishell.h"
 
 int	function_tree_seq(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)

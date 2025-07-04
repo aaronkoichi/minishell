@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:33:56 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/05 00:41:12 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:15:30 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
 static char	**create_arr_from_t_file(t_file *file)
 {
@@ -33,12 +33,12 @@ static char	**create_arr_from_t_file(t_file *file)
 static char	**sort_readdir_helper(t_file *unsorted)
 {
 	char	**arr;
-	char 	**sorted; 
+	char	**sorted;
 
 	arr = create_arr_from_t_file(unsorted);
 	if (!arr)
 		return (NULL);
-	sorted = qsort_main(arr);	
+	sorted = qsort_main(arr);
 	free_arr(arr);
 	return (sorted);
 }

@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:11:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/03 15:33:36 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:17:10 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
 /* Duplicate a new malloc string but until before the letter given. */
 static char	*ft_strcdup(char *str, char letter)

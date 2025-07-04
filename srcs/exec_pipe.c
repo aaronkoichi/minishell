@@ -6,11 +6,10 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 12:40:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 13:52:02 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:14:45 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
 #include "minishell.h"
 
 // Redirect the output into stdin.

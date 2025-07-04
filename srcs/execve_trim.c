@@ -6,11 +6,11 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 15:48:42 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/02 00:29:02 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/05 01:14:59 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
 static size_t	count_without_quotes(char *arr)
 {
