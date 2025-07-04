@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 00:03:25 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 13:51:39 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 int	function_tree_seq(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 {
 	int	status;
+
 	status = exec_main(node->left, vars, tree, token);
 	if (status == -2)
 		return (-2);
@@ -67,8 +68,7 @@ int	function_tree(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 
 int	exec_main(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 {
-	if (node == NULL
-			&& node->cmd->argc == 0)
+	if (node == NULL && node->cmd->argc == 0)
 		return (0);
 	if (node->type == NODE_ROOT)
 		return (exec_main(node->left, vars, tree, token));

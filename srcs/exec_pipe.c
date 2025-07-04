@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 12:40:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 00:01:50 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 13:52:02 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include "minishell.h"
 
 // Redirect the output into stdin.
-int	function_tree_pipe_left(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper)
+int	function_tree_pipe_left(t_ast *node, t_vars *vars,
+		t_exec *info, t_wrapper wrapper)
 {
 	dup2(info->pipe_fd[1], 1);
 	close(info->pipe_fd[0]);
@@ -28,7 +29,8 @@ int	function_tree_pipe_left(t_ast *node, t_vars *vars, t_exec *info, t_wrapper w
 	exit(EXIT_SUCCESS);
 }
 
-int	function_tree_pipe_right(t_ast *node, t_vars *vars, t_exec *info, t_wrapper wrapper)
+int	function_tree_pipe_right(t_ast *node, t_vars *vars,
+		t_exec *info, t_wrapper wrapper)
 {
 	dup2(info->pipe_fd[0], 0);
 	close(info->pipe_fd[0]);

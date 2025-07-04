@@ -6,15 +6,15 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:23:24 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 13:23:36 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 13:51:09 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execute.h"
 
-int ft_strcmp_lower(char *s1, char *s2)
+int	ft_strcmp_lower(char *s1, char *s2)
 {
-	char 	*temp;
+	char	*temp;
 	char	*temp2;
 	int		i;
 
@@ -33,4 +33,3 @@ int ft_strcmp_lower(char *s1, char *s2)
 	free(temp2);
 	return (i);
 }
-
