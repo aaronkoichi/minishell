@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 00:01:06 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 18:27:39 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	redir_out(t_redir *redir)
 	if (fd < 0)
 	{
 		perror("minishell: output redirection");
-		return (1);
+		return (EXIT_FAILURE);
 	}
 	dup2(fd, 1);
 	close(fd);
@@ -51,7 +51,7 @@ int	redir_in(t_redir *redir)
 	if (fd[0] < 0)
 	{
 		perror("minishell: input redirection");
-		return (fd[0]);
+		return (EXIT_FAILURE);
 	}
 	dup2(fd[0], 0);
 	close(fd[0]);

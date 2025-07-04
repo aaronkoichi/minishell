@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 14:39:56 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/03 15:27:47 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 18:16:15 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,8 @@ static bool	is_valid_num(char *str)
 	return (true);
 }
 
-static void	close_fd(t_vars *vars)
+static void	close_fd()
 {
-	close(0);
-	close(1);
-	close(2);
-	dup2(vars->ori_stdin, 0);
-	dup2(vars->ori_stdout, 1);
-	dup2(vars->ori_stderr, 2);
 	close(0);
 	close(1);
 	close(2);
@@ -42,7 +36,7 @@ static void	close_fd(t_vars *vars)
 
 static void	terminate_default(t_cmd *cmd, t_vars *vars, t_str_dat dat)
 {
-	close_fd(vars);
+	close_fd();
 	free_arr(cmd->argv);
 	cmd->argv = dat.original;
 	free_arr(dat.command);

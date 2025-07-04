@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 22:48:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/01 23:47:07 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 18:27:54 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,14 @@ int	redirect_fd(t_redir **redirs)
 		if (redirs[0] != NULL)
 		{
 			status = redir_in(redirs[0]);
-			if (status < 0)
-				return (-1);
+			if (status != 0)
+				return (1);
 		}
 		if (redirs[1] != NULL)
 		{
 			status = redir_out(redirs[1]);
-			if (status < 0)
-				return (-1);
+			if (status != 0)
+				return (1);
 		}
 	}
 	return (0);

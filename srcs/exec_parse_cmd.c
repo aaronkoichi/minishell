@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/04 00:00:00 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/04 18:36:10 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 static void	reset_free_default(char **command, t_vars *vars,
 				t_redir **redirs, char **envp)
 {
-	(void)vars;
 	free_arr(command);
+	if (redirs != NULL)
+		reset_fd(vars);
 	free(redirs);
 	if (envp != NULL)
 		free_arr(envp);
@@ -97,6 +98,8 @@ int	exec_cmd_main(t_ast *node, t_vars *vars)
 		vars->exit_code = 127;
 	else if (status == -2)
 		vars->exit_code = -2;
+	else if (status < 2)
+		vars->exit_code = status;
 	else
 		vars->exit_code = WEXITSTATUS(status);
 	free_arr(node->cmd->argv);
