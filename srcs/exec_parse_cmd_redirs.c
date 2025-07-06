@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:19:09 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/05 01:16:38 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/07 07:42:29 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	subshell_redir(t_ast *node)
 
 	redirs = determine_redir(node);
 	status = redirect_fd(redirs);
+	free(redirs);
 	if (status == -1)
 		return (EXIT_FAILURE);
 	else
