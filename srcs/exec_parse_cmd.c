@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 13:15:10 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/07 09:36:23 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 16:03:56 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	exec_cmd(t_ast *node, t_redir **redirs, t_str_dat dat, t_vars *vars)
 		redirs = NULL;
 	stat_fork[0] = redirect_fd(redirs);
 	if (stat_fork[0] != 0)
-		return (EXIT_FAILURE);
+		return (redirect_fail(dat.command, redirs));
 	if (builtin_functions(node->cmd, vars, dat, &stat_fork[0]) != -1)
 		;
 	else

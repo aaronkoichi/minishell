@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 22:48:14 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/07 07:22:11 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 16:04:28 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,11 @@ void	close_fds(void)
 	close(0);
 	close(1);
 	close(2);
+}
+
+int	redirect_fail(char **cmd, t_redir **redirs)
+{
+	free_arr(cmd);
+	free(redirs);
+	return (EXIT_FAILURE);
 }

@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/07 09:38:37 by jthiew           ###   ########.fr       */
+/*   Updated: 2025/07/07 16:04:04 by zlee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,7 @@ int				exec_cmd_main(t_ast *node, t_vars *vars);
 void			touch_files(t_ast *node, t_redir **redirs);
 int				redirect_fd(t_redir **redirs);
 void			close_fds(void);
+int				redirect_fail(char **cmd, t_redir **redirs);
 // exec_parse_cmd_redirs.c
 int				redir_out(t_redir *redir);
 int				redir_in(t_redir *redir);
