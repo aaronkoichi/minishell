@@ -6,7 +6,7 @@
 /*   By: jthiew <jthiew@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 14:02:57 by jthiew            #+#    #+#             */
-/*   Updated: 2025/07/05 01:29:30 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/07 09:38:37 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,8 @@ typedef struct s_wrapper
 	t_ast	*tree;
 	t_token	*token;
 }	t_wrapper;
-// PARSING
+
+// ==========================BUILTINS========================
 // builtin_cd.c
 int				builtin_cd(t_cmd *cmd, t_env **env, t_vars *vars,
 					t_str_dat dat);
@@ -223,7 +224,9 @@ int				builtin_unset(t_cmd *cmd, t_env **env, t_vars *vars,
 
 // builtin.c
 int				builtin_functions(t_cmd *cmd, t_vars *vars,
-					t_str_dat dat);
+					t_str_dat dat, int *status);
+
+// ==========================PARSING========================
 // envp.c
 char			*get_env_key(char *env_line, int *i);
 char			*get_env_value(char *env_line);
@@ -295,6 +298,7 @@ bool			is_token_redirs(t_token *token);
 
 // token_word.c
 char			*token_word(char **str);
+
 // vars.c
 void			destroy_vars(t_vars *vars);
 void			init_vars(t_vars *vars, char **envp);
