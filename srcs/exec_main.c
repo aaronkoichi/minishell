@@ -6,7 +6,7 @@
 /*   By: zlee <zlee@student.42kl.edu.my>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:34:18 by zlee              #+#    #+#             */
-/*   Updated: 2025/07/05 01:15:44 by zlee             ###   ########.fr       */
+/*   Updated: 2025/07/07 09:10:14 by jthiew           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,7 @@ int	function_tree(t_ast *node, t_vars *vars, t_ast *tree, t_token *token)
 	else if (node->type == NODE_PIPE)
 		return (function_tree_pipe(node, vars, tree, token));
 	else if (node->type == NODE_COMMAND)
-	{
 		return (exec_cmd_main(node, vars));
-	}
 	return (1);
 }
 
